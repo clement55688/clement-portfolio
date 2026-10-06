@@ -1,0 +1,1 @@
+export function GET() { return Response.json({ status: "operational", build: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "local", region: process.env.VERCEL_REGION ?? process.env.VERCEL_ENV ?? "local", builtAt: process.env.NEXT_PUBLIC_BUILD_TIME ?? "development" }); }

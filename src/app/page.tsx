@@ -3,6 +3,8 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { SceneMount } from "@/components/scene-mount";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { SideNav } from "@/components/side-nav";
+import { Guestbook } from "@/components/guestbook";
+import { FooterStats } from "@/components/footer-stats";
 
 const projects = [
   { index: "01", title: "Signal / Noise", type: "Data experiment", copy: "A living map that turns messy public data into calm, explorable stories." },
@@ -35,8 +37,9 @@ export default function Home() {
           <div className="orbit-labels" aria-label="Playground topics"><span>WEBGL</span><span>GENERATIVE</span><span>GAMES</span></div>
         </section>
         <section id="contact" className="section contact" aria-labelledby="contact-title">
-          <p className="kicker">04 / CONTACT</p><h2 id="contact-title">Let&apos;s make<br />something <em>matter.</em></h2><a href="mailto:hello@example.com" className="contact-link">hello@example.com <ArrowUpRight /></a>
-          <footer><span>© 2026 Clement Lin</span><span>Built with intent + too much coffee</span><a href="https://github.com/clement55688">GitHub</a></footer>
+          <div className="contact-intro"><p className="kicker">04 / CONTACT</p><h2 id="contact-title">Let&apos;s make<br />something <em>matter.</em></h2><a href="mailto:hello@example.com" className="contact-link">hello@example.com <ArrowUpRight /></a></div>
+          <Guestbook />
+          <footer><span>© 2026 Clement Lin</span><FooterStats /><a href="https://github.com/clement55688">GitHub</a></footer>
         </section>
       </main>
     </SmoothScroll>
