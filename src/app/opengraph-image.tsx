@@ -1,0 +1,5 @@
+import { ImageResponse } from "next/og";
+export const alt = "Clement Lin — Creative Developer";
+export const size = { width: 1200, height: 630 };
+export const contentType = "image/png";
+export default function Image() { return new ImageResponse(<div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "68px", color: "#f1efe8", background: "#090b0a", fontFamily: "sans-serif" }}><div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, letterSpacing: 4 }}><span>CLEMENT LIN</span><span style={{ color: "#d8ff3e" }}>PORTFOLIO / 2026</span></div><div style={{ display: "flex", flexDirection: "column", fontSize: 104, lineHeight: .88, letterSpacing: -7, fontWeight: 600 }}><span>CREATIVE</span><span style={{ color: "#d8ff3e", fontStyle: "italic" }}>DEVELOPER.</span></div><div style={{ display: "flex", justifyContent: "space-between", fontSize: 21, color: "#9b9b95" }}><span>DESIGN × ENGINEERING</span><span>CLARITY, CHARACTER, JUST ENOUGH WEIRD.</span></div></div>, size); }
