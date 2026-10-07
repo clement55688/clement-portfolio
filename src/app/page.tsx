@@ -8,7 +8,7 @@ import { FooterStats } from "@/components/footer-stats";
 import { Reveal } from "@/components/reveal";
 
 const projects = [
-  { index: "01", title: "Signal / Noise", type: "Data experiment", copy: "A living map that turns messy public data into calm, explorable stories." },
+  { index: "01", title: "Snow Signal", type: "Live 3D weather", copy: "A global snowfall intelligence map for riders chasing the next storm.", href: "/snow-signal" },
   { index: "02", title: "Night Shift", type: "Product system", copy: "An operations workspace designed for the people keeping cities awake." },
   { index: "03", title: "Small Futures", type: "Creative code", copy: "Generative objects that imagine optimistic tools from possible tomorrows." },
 ];
@@ -31,7 +31,7 @@ export default function Home() {
         </section>
         <section id="work" className="section work" aria-labelledby="work-title">
           <div className="section-heading"><div><span className="section-number">02</span><p className="kicker">SELECTED WORK</p></div><h2 id="work-title">A few things<br />worth <em>scrolling for.</em></h2></div>
-          <Reveal className="project-list">{projects.map((project) => <article className="project" key={project.title}><span>{project.index}</span><div><p>{project.type}</p><h3>{project.title}</h3><p>{project.copy}</p></div><ArrowUpRight aria-hidden="true" /></article>)}</Reveal>
+          <Reveal className="project-list">{projects.map((project) => <Link className="project" aria-label={`View ${project.title} project`} href={project.href ?? "#work"} key={project.title}><span>{project.index}</span><article><p>{project.type}</p><h3>{project.title}</h3><p>{project.copy}</p></article><ArrowUpRight aria-hidden="true" /></Link>)}</Reveal>
         </section>
         <section id="playground" className="section playground" aria-labelledby="playground-title">
           <div className="orbital-copy"><span className="section-number">03</span><p className="kicker">PLAYGROUND</p><h2 id="playground-title">Experiments<br />without a <em>brief.</em></h2><p>Shaders, generative systems, tiny games, and strange interfaces. A place to learn in public.</p><Link href="/playground/snake" className="text-link">Enter the playground <ArrowUpRight /></Link></div>
