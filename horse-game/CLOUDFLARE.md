@@ -1,6 +1,6 @@
 # GitHub → Cloudflare deployment
 
-Cloudflare Workers Builds is connected to this GitHub repository. The `hoof-game` Worker project and `hoof-leaderboard` D1 database are created, and production builds are configured for the game branch and folder below. The first successful build is being verified; a live Cloudflare URL will be recorded after verification.
+Cloudflare Workers Builds is connected to this GitHub repository. HOOF is live at https://hoof-game.a2040404.workers.dev with the `hoof-leaderboard` D1 database connected. The first GitHub-triggered production build succeeded, and both the game and leaderboard endpoint returned HTTP 200.
 
 Use these project settings:
 
