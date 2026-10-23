@@ -9,14 +9,12 @@ let best = 0;
 let sound = false;
 let audio;
 let last = performance.now();
-let visualTime = 0;
 let shareTimer;
 let accumulator = 0;
 let runTicks = 0;
 let runEvents = [];
 let submitted = false;
 let submitting = false;
-let gait = 0;
 let playerName = '';
 try { playerName = localStorage.getItem('hoof-player-name') || ''; } catch { /* Optional preference. */ }
 $('player-name').value = playerName;
@@ -237,16 +235,14 @@ function draw() {
   // Scale the horse uniformly: portrait screens must not squash it horizontally.
   const horseScale = Math.min(w * .82 / 330, h * .60 / 210);
   const running = state.status === 'running';
-  const moving = running && state.speed > .1;
-  const bob = moving ? Math.sin(gait * 2) * Math.min(state.speed + 1, 5) : Math.sin(visualTime * 1.8) * 1.4;
   ellipse(horseX, 291, 122, 9, '#535c3b20');
-  ctx.save(); ctx.translate(horseX, 291); ctx.scale(horseScale / sx, horseScale / sy); ctx.rotate(-course.angle); ctx.translate(0, -76 + bob); ctx.rotate(state.status === 'over' && !state.finished ? Math.sign(state.tilt || 1) * .75 : state.tilt * .85);
+  ctx.save(); ctx.translate(horseX, 291); ctx.scale(horseScale / sx, horseScale / sy); ctx.rotate(-course.angle); ctx.translate(0, -76); ctx.rotate(state.status === 'over' && !state.finished ? Math.sign(state.tilt || 1) * .75 : state.tilt * .85);
   const leg = (index, hipX, back) => {
     const impulse = state.legs[index];
-    const phase = gait + ([0, Math.PI, Math.PI, 0][index]);
-    const stride = moving ? Math.sin(phase) * 27 : 0;
-    const footX = hipX + stride + (index % 2 ? 12 : -6) + impulse * (index < 2 ? -13 : 13);
-    const footY = 76 - (moving ? Math.max(0, Math.cos(phase)) * 23 : 0) - impulse * 8;
+    // Only this leg's accepted button press drives its step. Speed never cycles the feet.
+    const reach = impulse * impulse * (3 - 2 * impulse);
+    const footX = hipX + (index % 2 ? 12 : -6) + reach * 32;
+    const footY = 76 - Math.sin(impulse * Math.PI / 2) * 24;
     const dx = footX - hipX, dy = footY - 10, length = Math.hypot(dx, dy);
     const bend = Math.sqrt(Math.max(0, 39 * 39 - length * length / 4));
     const kneeX = (hipX + footX) / 2 - dy / length * bend;
@@ -281,12 +277,11 @@ function draw() {
   ctx.restore();
 }
 function frame(now) {
-  const dt = Math.min((now-last)/1000, .04); last=now; visualTime += dt;
+  const dt = Math.min((now-last)/1000, .04); last=now;
   const wasRunning = state.status === 'running';
   if (state.status === 'running') {
     accumulator += dt;
     while (accumulator >= .02 && state.status === 'running') { step(state, .02); runTicks++; accumulator -= .02; }
-    if (state.speed > .1) gait += dt * (8 + state.speed * 2.3);
   } else accumulator = 0;
   const balance = Math.max(-100, Math.min(100, state.tilt / FALL_ANGLE * 100));
   $('balance-dot').style.left = `calc(${50 + balance * .45}% - 7px)`;
