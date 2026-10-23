@@ -1,0 +1,1 @@
+.controls button.next{outline:4px solid #fff;animation:swim-pulse .75s ease-in-out infinite alternate;box-shadow:0 0 24px #d5ff6f88}.meters meter{min-width:0}@keyframes swim-pulse{to{filter:brightness(1.28);transform:translateY(-3px)}}@media(prefers-reduced-motion:reduce){.controls button.next{animation:none}}
