@@ -1,4 +1,4 @@
-import { createRun, tapLeg, step, ORDER, COLORS, RECORD_KEY } from './core.mjs';
+import { createRun, tapLeg, step, ORDER, COLORS, RECORD_KEY, RULESET, terrainAt, FALL_ANGLE, RUN_SECONDS } from './core.mjs';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene');
@@ -23,7 +23,7 @@ $('player-name').value = playerName;
 try { const stored = Number(localStorage.getItem(RECORD_KEY)); if (Number.isFinite(stored) && stored > 0) best = stored; } catch { /* Private browsing still works. */ }
 $('best').textContent = `${best.toFixed(1)} m`;
 const challengeUrl = new URL(location.href);
-const target = challengeUrl.searchParams.get('v') === '2' ? Number(challengeUrl.searchParams.get('beat')) : 0;
+const target = challengeUrl.searchParams.get('v') === String(RULESET) ? Number(challengeUrl.searchParams.get('beat')) : 0;
 if (Number.isFinite(target) && target > 0) $('challenge').textContent = `FRIEND TO BEAT: ${target.toFixed(1)} m`;
 
 function beep(freq, duration = .07) {
@@ -60,7 +60,7 @@ function end() {
     try { localStorage.setItem(RECORD_KEY, best.toFixed(4)); } catch { /* Keep the session record. */ }
     $('best').textContent = `${best.toFixed(1)} m`;
   }
-  $('overlay-label').textContent = state.distance >= 10 ? 'YOU MADE IT PAST 10 M!' : 'SO CLOSE. ONE MORE TRY?';
+  $('overlay-label').textContent = state.finished ? 'TRAIL COMPLETE! ★' : state.distance >= 40 ? `${Math.floor(state.distance / 40)} TRAIL SECTIONS CLEARED!` : 'NICE TRY. FIND YOUR RHYTHM!';
   $('overlay-title').textContent = `${state.distance.toFixed(1)} meters!`;
   $('overlay-copy').textContent = state.reason;
   $('start').innerHTML = 'TRY AGAIN <span aria-hidden="true">↗</span>';
@@ -159,7 +159,7 @@ $('score-form').addEventListener('submit', async event => {
   if (submitting || submitted || state.status !== 'over') return;
   submitting = true; $('submit-score').disabled = true; $('board-status').textContent = 'Checking your run…';
   try {
-    const response = await fetch('/api/leaderboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: $('player-name').value, events: runEvents, ticks: runTicks }), signal: AbortSignal.timeout(15000) });
+    const response = await fetch('/api/leaderboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: $('player-name').value, events: runEvents, ticks: runTicks, ruleset: RULESET }), signal: AbortSignal.timeout(15000) });
     const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Could not submit. Please try again.');
     submitted = true; renderRankings(data.scores); $('score-form').hidden = true; $('save-score').hidden = true;
     $('board-status').textContent = `Saved! ${data.distance.toFixed(1)} m. Your best run per name is shown.`;
@@ -170,7 +170,7 @@ $('score-form').addEventListener('submit', async event => {
 loadRankings();
 $('share').addEventListener('click', async () => {
   const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('beat', state.distance.toFixed(1));
-  url.searchParams.set('v', '2');
+  url.searchParams.set('v', String(RULESET));
   const text = `I got a horse ${state.distance.toFixed(1)} meters before gravity won. Beat that. 🐴`;
   try {
     if (navigator.share) await navigator.share({ title: 'HOOF. — Beat my horse', text, url: url.href });
@@ -200,6 +200,9 @@ function draw() {
   if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
   const sx = w / 1100, sy = h / 352;
+  const course = terrainAt(state.distance);
+  const horseX = 525;
+  const groundY = x => 291 - (terrainAt(state.distance + (x - horseX) / 70).height - course.height) * 70 * sx / sy;
   ctx.save(); ctx.scale(sx, sy);
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   const sky = ctx.createLinearGradient(0, 0, 0, 290); sky.addColorStop(0, '#c4eaff'); sky.addColorStop(1, '#e9f8ff');
@@ -209,30 +212,35 @@ function draw() {
   for (let i=0;i<3;i++) { const cx = ((i*420+80-state.distance*3)%1450+1450)%1450-100; ellipse(cx,115+i%2*25,65,13,'#ffffffb0'); ellipse(cx-20,107+i%2*25,28,18,'#ffffffb0'); ellipse(cx+15,104+i%2*25,30,22,'#ffffffb0'); }
   path([[0,241],[108,203],[232,220],[344,192],[499,234],[659,206],[780,226],[955,185],[1100,215],[1100,352],[0,352]], null, 0, '#b2dfc6');
   path([[0,264],[182,238],[300,253],[457,230],[645,258],[830,238],[1010,256],[1100,242],[1100,352],[0,352]], null, 0, '#99ce9b');
-  ctx.fillStyle = '#e9daa7'; ctx.fillRect(0, 291, 1100, 61);
-  ctx.fillStyle = '#b0d581'; ctx.fillRect(0,291,1100,7);
+  const road = Array.from({ length: 57 }, (_, i) => [i * 20, groundY(i * 20)]);
+  path([...road, [1120, 500], [0, 500]], null, 0, '#e9daa7');
+  path(road, '#b0d581', 7);
   const offset = state.distance * 70;
   for (let i = -1; i < 13; i++) {
     const x = ((i * 117 - offset * .55) % 1404 + 1404) % 1404 - 120;
-    path([[x,282],[x-3,275],[x+2,279],[x+7,271]], '#71aa69', 1.6);
-    path([[x+45,310],[x+55,310]], '#cbb980', 2);
+    const y = groundY(x);
+    path([[x,y-8],[x-3,y-15],[x+2,y-11],[x+7,y-19]], '#71aa69', 1.6);
+    path([[x+45,groundY(x+45)+20],[x+55,groundY(x+55)+20]], '#cbb980', 2);
   }
   for (let i = 0; i < 5; i++) {
     const x = ((i * 270 - offset * .3) % 1350 + 1350) % 1350 - 80;
-    path([[x,270],[x,235]], '#f9f6df', 5); path([[x-100,246],[x+100,246]], '#f9f6df', 4);
+    path([[x,groundY(x)-22],[x,groundY(x)-57]], '#f9f6df', 5);
+    path([[x-100,groundY(x-100)-46],[x+100,groundY(x+100)-46]], '#f9f6df', 4);
   }
-  const marker = ((1050 - offset) % 1300 + 1300) % 1300;
-  path([[marker,290],[marker,253]], '#666b51', 3);
-  round(marker-19, 237, 38, 22, 3, '#f8f3d9', '#666b51', 1.5);
-  ctx.fillStyle = '#666b51'; ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.fillText(`${Math.floor(state.distance / 50) * 50 + 50}m`, marker, 252);
+  const marker = horseX + course.remaining * 70;
+  if (marker < 1150) {
+    const y = groundY(marker);
+    path([[marker,y],[marker,y-40]], '#666b51', 3);
+    round(marker-35,y-62,70,28,5,'#fff9e7','#666b51',1.5);
+    ctx.fillStyle = '#666b51'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.fillText(`${(course.section+1)*40} m`,marker,y-43);
+  }
   // Scale the horse uniformly: portrait screens must not squash it horizontally.
-  const horseX = 525;
   const horseScale = Math.min(w * .82 / 330, h * .60 / 210);
   const running = state.status === 'running';
   const moving = running && state.speed > .1;
   const bob = moving ? Math.sin(gait * 2) * Math.min(state.speed + 1, 5) : Math.sin(visualTime * 1.8) * 1.4;
   ellipse(horseX, 291, 122, 9, '#535c3b20');
-  ctx.save(); ctx.translate(horseX, 291); ctx.scale(horseScale / sx, horseScale / sy); ctx.translate(0, -76 + bob); ctx.rotate(state.status === 'over' ? Math.sign(state.tilt || 1) * .75 : state.tilt * .85);
+  ctx.save(); ctx.translate(horseX, 291); ctx.scale(horseScale / sx, horseScale / sy); ctx.rotate(-course.angle); ctx.translate(0, -76 + bob); ctx.rotate(state.status === 'over' && !state.finished ? Math.sign(state.tilt || 1) * .75 : state.tilt * .85);
   const leg = (index, hipX, back) => {
     const impulse = state.legs[index];
     const phase = gait + ([0, Math.PI, Math.PI, 0][index]);
@@ -267,7 +275,7 @@ function draw() {
   // A tiny saddle blanket and color-coded joints match the buttons.
   round(-38,-57,73,31,7,'#fa876d','#34362b',3);path([[-31,-48],[25,-48]], '#f5c3a1',2);
   leg(0,-83,false);leg(2,43,false);
-  if (state.status === 'over') { ctx.font = '24px sans-serif';ctx.fillStyle='#34362b';ctx.fillText('✳',157,-109);ctx.fillText('✳',135,-130); }
+  if (state.status === 'over') { ctx.font = '24px sans-serif';ctx.fillStyle=state.finished?'#e5a820':'#34362b';ctx.fillText(state.finished?'★':'✳',157,-109);ctx.fillText(state.finished?'★':'✳',135,-130); }
   ctx.restore();
   if (running && state.speed > 2) for (let i=0;i<3;i++) ellipse(horseX-130-i*20-(state.time*40)%20,286-i*2,6-i,3,'#c3b99566');
   ctx.restore();
@@ -280,9 +288,15 @@ function frame(now) {
     while (accumulator >= .02 && state.status === 'running') { step(state, .02); runTicks++; accumulator -= .02; }
     if (state.speed > .1) gait += dt * (8 + state.speed * 2.3);
   } else accumulator = 0;
-  const balance = Math.max(-100, Math.min(100, state.tilt / .68 * 100));
+  const balance = Math.max(-100, Math.min(100, state.tilt / FALL_ANGLE * 100));
   $('balance-dot').style.left = `calc(${50 + balance * .45}% - 7px)`;
   $('balance').setAttribute('aria-valuenow', String(Math.round(balance)));
+  const course = terrainAt(state.distance);
+  $('trail-label').textContent = `${['☀','↗','↘'][course.kind]} ${course.label} · ${course.level}`;
+  $('trail-next').textContent = `${course.next} in ${Math.ceil(course.remaining)} m`;
+  $('trail-progress').style.width = `${course.progress * 100}%`;
+  const remaining = Math.max(0, Math.ceil(RUN_SECONDS - state.time));
+  $('run-clock').textContent = `${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`;
   if (wasRunning) { $('distance').innerHTML = `${state.distance.toFixed(1)}<span>m</span>`; if (state.status === 'over') end(); else $('feedback').textContent = state.feedback; }
   draw(); requestAnimationFrame(frame);
 }

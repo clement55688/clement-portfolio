@@ -1,10 +1,10 @@
-import { createRun, step, tapLeg } from '../dist/core.mjs';
+import { createRun, step, tapLeg, RULESET } from '../dist/core.mjs';
 
 /* ASSETS */
 const json = (data, status = 200) => Response.json(data, { status, headers: { 'Cache-Control': 'no-store' } });
 const rankingSql = `SELECT name, score FROM (SELECT name, score, created_at,
   ROW_NUMBER() OVER (PARTITION BY name_key ORDER BY score DESC, created_at ASC) AS place
-  FROM hoof_scores) WHERE place = 1 ORDER BY score DESC, created_at ASC LIMIT 10`;
+  FROM hoof_scores WHERE ruleset = ${RULESET}) WHERE place = 1 ORDER BY score DESC, created_at ASC LIMIT 10`;
 async function hash(value) {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
   return Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2, '0')).join('');
@@ -46,6 +46,7 @@ export async function handleApi(request, env) {
   let body;
   try { const text = await request.text(); if (text.length > 50000) return json({ error: 'Run is too large.' }, 413); body = JSON.parse(text); } catch { return json({ error: 'Invalid submission.' }, 400); }
   if (typeof body?.name !== 'string') return json({ error: 'Enter your name.' }, 400);
+  if (body.ruleset !== RULESET) return json({ error: 'The trail has been updated. Refresh the game before your next run.' }, 409);
   const name = body.name.normalize('NFKC').replace(/[^\p{L}\p{N} _.-]/gu, '').trim().slice(0, 16);
   if (name.length < 1) return json({ error: 'Use 1–16 letters or numbers for your name.' }, 400);
   let score;
@@ -54,8 +55,8 @@ export async function handleApi(request, env) {
   const ipHash = await hash(request.headers.get('cf-connecting-ip') || 'local-preview');
   const rate = await env.DB.prepare('SELECT COUNT(*) AS count FROM hoof_scores WHERE ip_hash = ? AND created_at > ?').bind(ipHash, now - 60000).first();
   if (rate.count >= 8) return json({ error: 'A lot of horses! Try submitting again in a minute.' }, 429);
-  const replayHash = await hash(JSON.stringify([body.events, body.ticks]));
-  const result = await env.DB.prepare('INSERT OR IGNORE INTO hoof_scores (id, name, name_key, score, replay_hash, ip_hash, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(crypto.randomUUID(), name, name.toLowerCase(), score, replayHash, ipHash, now).run();
+  const replayHash = await hash(JSON.stringify([RULESET, body.events, body.ticks]));
+  const result = await env.DB.prepare('INSERT OR IGNORE INTO hoof_scores (id, name, name_key, score, replay_hash, ip_hash, created_at, ruleset) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(crypto.randomUUID(), name, name.toLowerCase(), score, replayHash, ipHash, now, RULESET).run();
   if (!result.meta.changes) return json({ error: 'This run was already submitted.' }, 409);
   const { results } = await env.DB.prepare(rankingSql).all();
   return json({ distance: score / 10, scores: results.map((s, i) => ({ rank: i + 1, name: s.name, distance: s.score / 10 })) }, 201);

@@ -8,7 +8,7 @@ for (const name of await readdir(new URL('dist/', root))) {
   assets[`/${name}`] = { type: mime[ext], data: (await readFile(new URL(`dist/${name}`, root))).toString('base64') };
 }
 let worker = await readFile(new URL('worker/index.js', root), 'utf8');
-worker = worker.replace("import { createRun, step, tapLeg } from '../dist/core.mjs';", await readFile(new URL('dist/core.mjs', root), 'utf8'));
+worker = worker.replace(/import \{[^}]+\} from '\.\.\/dist\/core.mjs';/, await readFile(new URL('dist/core.mjs', root), 'utf8'));
 worker = worker.replace('/* ASSETS */', `const ASSETS = ${JSON.stringify(assets)};`);
 await mkdir(new URL('dist/server/', root), { recursive: true });
 await mkdir(new URL('dist/.openai/', root), { recursive: true });

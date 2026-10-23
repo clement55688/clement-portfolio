@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createRun, step, tapLeg, ORDER } from '../dist/core.mjs';
+import { createRun, step, tapLeg, ORDER, RULESET } from '../dist/core.mjs';
 import worker, { verifyRun, handleApi } from '../worker/index.js';
 import { localDatabase } from '../local-db.mjs';
 
@@ -17,7 +17,7 @@ function replay(offset = 0) {
   return { events, ticks, expected: Math.round(state.distance * 10) };
 }
 function post(body, headers = {}) {
-  return new Request('https://hoof.test/api/leaderboard', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(body) });
+  return new Request('https://hoof.test/api/leaderboard', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify({ ruleset: RULESET, ...body }) });
 }
 test('server calculates a completed run from inputs and rejects forged or unfinished runs', () => {
   const run = replay(); assert.equal(verifyRun(run.events, run.ticks), run.expected);
@@ -64,4 +64,13 @@ test('generated Worker embeds the site and serves API errors honestly without a 
   const response = await generated.fetch(new Request('https://hoof.test/'), {});
   assert.equal(response.status, 200); assert.match(await response.text(), /Hoof of fame/);
   const missing = await worker.fetch(new Request('https://hoof.test/api/leaderboard'), {}); assert.equal(missing.status, 503);
+});
+test('older scores remain stored but do not compete with the new trail rules', async () => {
+  const DB=localDatabase();
+  try {
+    await DB.prepare('INSERT INTO hoof_scores (id,name,name_key,score,replay_hash,ip_hash,created_at) VALUES (?,?,?,?,?,?,?)').bind('old','Old Horse','old horse',999999,'old-replay','old-ip',1).run();
+    const board=await (await handleApi(new Request('https://hoof.test/api/leaderboard'),{DB})).json();assert.equal(board.scores.length,0);
+    const row=await DB.prepare('SELECT COUNT(*) AS count FROM hoof_scores').first();assert.equal(row.count,1);
+    assert.equal((await handleApi(post({...replay(),name:'Old client',ruleset:2}),{DB})).status,409);
+  } finally {DB.close();}
 });
