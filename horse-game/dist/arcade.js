@@ -1,3 +1,4 @@
+import { sectorGeometry } from './wheel-geometry.mjs';
 import { wrap, nearestGame, advanceSpring } from './wheel-motion.mjs';
 const shelf = document.querySelector('#shelf');
 const cards = [...shelf.querySelectorAll('.game-card')];
@@ -20,6 +21,28 @@ const panels = Array.from({ length: panelCount }, (_, i) => {
   rotor.append(panel); return panel;
 });
 shelf.append(rotor);
+function layoutWheel() {
+  const pivot = parseFloat(getComputedStyle(shelf).getPropertyValue('--wheel-pivot'));
+  const top = parseFloat(getComputedStyle(panels[0]).top);
+  const innerEdge = matchMedia('(max-width:580px)').matches ? 212 : matchMedia('(max-width:900px)').matches ? 260 : 274;
+  const geometry = sectorGeometry(pivot - top, innerEdge, spacing);
+  document.querySelector('#sector-clip path').setAttribute('d', geometry.clipPath);
+  panels.forEach(panel => {
+    panel.style.width = `${geometry.width}px`;
+    panel.style.height = `${geometry.height}px`;
+    panel.style.transformOrigin = `${geometry.centerX}px ${geometry.pivotY}px`;
+    const border = panel.querySelector('.slice-border');
+    border.setAttribute('viewBox', `0 0 ${geometry.width} ${geometry.height}`);
+    border.querySelector('path').setAttribute('d', geometry.path);
+  });
+  const stage = shelf.closest('.wheel-stage');
+  stage.style.setProperty('--rim-center', `${pivot}px`);
+  stage.style.setProperty('--rim-size', `${(geometry.outerRadius + 8) * 2}px`);
+  stage.style.setProperty('--tick-size', `${(geometry.outerRadius + 17) * 2}px`);
+}
+layoutWheel();
+new ResizeObserver(layoutWheel).observe(shelf);
+
 const motion = { position: 0, target: 0, velocity: 0 };
 let selected = -1, frameId = 0, last = 0, drag = null, dragged = false;
 function updateDetails() {
