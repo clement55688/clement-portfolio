@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hoof-game",
+  "account_id": "dc373e8d482c778c62c93a48f3df8bd8",
   "main": "dist/server/index.js",
   "compatibility_date": "2026-10-22",
   "workers_dev": true,
@@ -8,6 +9,7 @@
     {
       "binding": "DB",
       "database_name": "hoof-leaderboard",
+      "database_id": "db1b0f5c-875f-46ab-ac56-e4fb1190f3a4",
       "migrations_dir": "drizzle"
     }
   ]
