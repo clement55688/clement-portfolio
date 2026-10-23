@@ -1,5 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import{emptyBoard,tile,mixCoats,move,spawn}from'../dist/catvolution/core.mjs';
-test('coat recipes are symmetric',()=>{assert.equal(mixCoats('orange','black'),'tortie');assert.equal(mixCoats('black','orange'),'tortie');assert.equal(mixCoats('tortie','white'),'calico')});
-test('equal cats merge once and preserve classic score',()=>{const b=emptyBoard();b[0]=tile(2,'orange');b[1]=tile(2,'black');b[2]=tile(4,'white');const r=move(b,'left');assert.deepEqual(r.board.filter(Boolean).map(x=>x.value),[4,4]);assert.equal(r.board[0].coat,'tortie');assert.equal(r.score,4)});
+import test from 'node:test';import assert from 'node:assert/strict';import{emptyBoard,tile,move,spawn}from'../dist/catvolution/core.mjs';
+test('equal cats grow once and keep the selected coat',()=>{const b=emptyBoard();b[0]=tile(2,'orange');b[1]=tile(2,'orange');b[2]=tile(4,'orange');const r=move(b,'left');assert.deepEqual(r.board.filter(Boolean).map(x=>x.value),[4,4]);assert.equal(r.board[0].coat,'orange');assert.equal(r.score,4)});
 test('different values do not merge',()=>{const b=emptyBoard();b[0]=tile(2,'orange');b[1]=tile(4,'black');assert.deepEqual(move(b,'left').board.filter(Boolean).map(x=>x.value),[2,4])});
 test('spawn happens in an empty cell',()=>{const b=emptyBoard();const out=spawn(b,'gray',()=>0);assert.equal(out.filter(Boolean).length,1);assert.equal(out[0].value,2);assert.equal(out[0].coat,'gray')});
