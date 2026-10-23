@@ -1,4 +1,4 @@
-import { createRun, tapLeg, step, ORDER, COLORS, RECORD_KEY, RULESET, terrainAt, FALL_ANGLE, RUN_SECONDS } from './core.mjs';
+import { createRun, tapLeg, step, ORDER, COLORS, RECORD_KEY, RULESET, terrainAt, FALL_ANGLE, RUN_SECONDS } from './core.mjs?v=trail3';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene');

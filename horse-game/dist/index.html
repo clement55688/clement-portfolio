@@ -14,7 +14,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <title>HOOF! — Born to flop.</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=trail3">
 </head>
 <body>
   <main class="shell">
@@ -46,6 +46,6 @@
   </main>
   <dialog id="help-dialog"><button class="close" id="close-help" aria-label="Close instructions">×</button><span class="mini-label">HOW TO PLAY</span><h2>Easy start.<br>Bigger hills.</h2><p>Go as far as you can in <b>90 seconds</b>. Tap different legs at a comfortable pace. <b>1 → 4 → 2 → 3</b> is a good start (keyboard Q → P → W → O).</p><p><b>0–40 m: meadow.</b> Learn the rhythm on flat ground. A wrong step is recoverable.</p><p><b>40–80 m: uphill.</b> Gravity slows you down. Keep stepping to climb.</p><p><b>80–120 m: downhill.</b> Gravity adds speed. Ease off and watch your balance.</p><p>The trail repeats with steeper hills. Repeating one leg makes you wobble; alternating helps you recover. Stopping too long ends your run.</p><button class="primary" id="got-it">GOT IT ↗</button></dialog>
   <dialog id="leaderboard-dialog" aria-labelledby="board-title"><button class="close" id="close-board" aria-label="Close leaderboard">×</button><span class="board-eyebrow">THE GLOBAL TOP 10</span><h2 id="board-title">Hoof of fame ★</h2><form id="score-form" hidden><label for="player-name">Your name on the board</label><div class="name-entry"><input id="player-name" name="name" maxlength="16" autocomplete="nickname" placeholder="e.g. NoodleHorse" required><button class="primary" id="submit-score" type="submit">Submit →</button></div><small>Your name and distance will be public.</small></form><p id="board-status" class="board-status" role="status"></p><div id="leaderboard-list" class="rank-list"></div><button class="board-refresh" id="refresh-dialog">Refresh rankings ↻</button></dialog>
-  <script type="module" src="game.js"></script>
+  <script type="module" src="game.js?v=trail3"></script>
 </body>
 </html>
