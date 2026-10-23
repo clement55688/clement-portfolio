@@ -2,12 +2,24 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { mkdirSync } from 'node:fs';
+import { localDatabase } from './local-db.mjs';
+import { handleApi } from './worker/index.js';
 const root = fileURLToPath(new URL('./dist/', import.meta.url));
 const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png' };
 const port = Number(process.env.PORT || 4173);
+mkdirSync(new URL('./.local/', import.meta.url), { recursive: true });
+const DB = localDatabase(new URL('./.local/scores.sqlite', import.meta.url));
 createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+    if (pathname.startsWith('/api/')) {
+      const chunks = []; let size = 0;
+      for await (const chunk of req) { size += chunk.length; if (size > 50000) { res.writeHead(413); res.end('Too large'); return; } chunks.push(chunk); }
+      const request = new Request(`http://${req.headers.host}${req.url}`, { method: req.method, headers: req.headers, ...(chunks.length ? { body: Buffer.concat(chunks) } : {}) });
+      const result = await handleApi(request, { DB });
+      res.writeHead(result.status, Object.fromEntries(result.headers)); res.end(Buffer.from(await result.arrayBuffer())); return;
+    }
     const target = path.resolve(root, `.${pathname === '/' ? '/index.html' : pathname}`);
     if (!target.startsWith(root)) { res.writeHead(403); res.end('Forbidden'); return; }
     const data = await readFile(target);

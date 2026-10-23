@@ -11,6 +11,15 @@ let audio;
 let last = performance.now();
 let visualTime = 0;
 let shareTimer;
+let accumulator = 0;
+let runTicks = 0;
+let runEvents = [];
+let submitted = false;
+let submitting = false;
+let gait = 0;
+let playerName = '';
+try { playerName = localStorage.getItem('hoof-player-name') || ''; } catch { /* Optional preference. */ }
+$('player-name').value = playerName;
 try { const stored = Number(localStorage.getItem(RECORD_KEY)); if (Number.isFinite(stored) && stored > 0) best = stored; } catch { /* Private browsing still works. */ }
 $('best').textContent = `${best.toFixed(1)} m`;
 const challengeUrl = new URL(location.href);
@@ -35,9 +44,11 @@ function hint() {
 function start() {
   clearTimeout(shareTimer);
   state = createRun(); state.status = 'running';
+  runTicks = 0; runEvents = []; accumulator = 0; submitted = false;
   $('distance').innerHTML = '0.0<span>m</span>';
   $('overlay').hidden = true;
   $('share').hidden = true;
+  $('save-score').hidden = true;
   $('share').textContent = 'Challenge a friend ↗';
   $('feedback').textContent = 'Tap 1 → 4 → 2 → 3. Keep a steady rhythm.';
   buttons.forEach(b => b.classList.remove('pressed'));
@@ -54,12 +65,14 @@ function end() {
   $('overlay-copy').textContent = state.reason;
   $('start').innerHTML = 'TRY AGAIN <span aria-hidden="true">↗</span>';
   $('overlay').hidden = false; $('share').hidden = false;
+  $('save-score').hidden = state.distance < .1;
   $('feedback').textContent = state.reason;
   hint(); beep(120, .25);
 }
 function tap(index) {
   if (state.status !== 'running') return;
   if (!tapLeg(state, index)) return;
+  runEvents.push([runTicks, index]);
   buttons[index].classList.add('pressed');
   setTimeout(() => buttons[index].classList.remove('pressed'), 100);
   $('feedback').textContent = state.feedback;
@@ -71,7 +84,7 @@ buttons.forEach((button, index) => {
   button.addEventListener('click', event => { if (event.detail === 0) tap(index); });
 });
 document.addEventListener('keydown', event => {
-  if ($('help-dialog').open || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (document.querySelector('dialog[open]') || event.altKey || event.ctrlKey || event.metaKey) return;
   const index = ['q', 'w', 'o', 'p'].indexOf(event.key.toLowerCase());
   if (index !== -1) { event.preventDefault(); if (!event.repeat) tap(index); }
 });
@@ -82,7 +95,7 @@ $('start').addEventListener('click', () => {
 $('restart').addEventListener('click', start);
 $('sound').addEventListener('click', () => {
   sound = !sound;
-  $('sound').innerHTML = `SOUND ${sound ? 'ON' : 'OFF'} <span aria-hidden="true">♪</span>`;
+  $('sound').textContent = sound ? '♫' : '♪';
   $('sound').setAttribute('aria-label', `Turn sound ${sound ? 'off' : 'on'}`);
   $('sound').setAttribute('aria-pressed', String(sound)); beep(440);
 });
@@ -94,12 +107,67 @@ function pause() {
   $('overlay-copy').textContent = 'Your horse can wait.';
   $('start').innerHTML = 'CONTINUE <span aria-hidden="true">↗</span>';
   $('share').hidden = true; $('overlay').hidden = false; hint();
+  $('save-score').hidden = true;
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
 window.addEventListener('blur', pause);
 $('help').addEventListener('click', () => { pause(); $('help-dialog').showModal(); });
 $('close-help').addEventListener('click', () => $('help-dialog').close());
 $('got-it').addEventListener('click', () => $('help-dialog').close());
+
+function renderRankings(scores) {
+  for (const id of ['leaderboard-list', 'leaderboard-preview']) {
+    const list = $(id); list.replaceChildren();
+    if (!scores.length) {
+      const empty = document.createElement('p'); empty.className = 'board-empty';
+      empty.textContent = 'No horses on the board yet. Your flop could be the first.'; list.append(empty);
+    }
+    for (const entry of scores) {
+      const row = document.createElement('div'); row.className = 'rank-row';
+      for (const [className, text] of [['rank', entry.rank === 1 ? '★' : String(entry.rank).padStart(2, '0')], ['rank-name', entry.name], ['rank-distance', `${entry.distance.toFixed(1)} m`]]) {
+        const span = document.createElement('span'); span.className = className; span.textContent = text; row.append(span);
+      }
+      list.append(row);
+    }
+  }
+}
+async function loadRankings() {
+  $('board-status').textContent = 'Loading rankings…';
+  try {
+    const response = await fetch('/api/leaderboard', { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+    const data = await response.json(); if (!response.ok) throw new Error(data.error);
+    renderRankings(data.scores); $('board-status').textContent = '';
+  } catch {
+    $('board-status').textContent = 'Couldn’t load rankings. Tap Refresh to try again.';
+    const preview = $('leaderboard-preview');
+    if (!preview.querySelector('.rank-row')) { preview.replaceChildren(); const note = document.createElement('p'); note.className = 'board-empty'; note.textContent = 'Rankings are taking a grass break. Tap Refresh to try again.'; preview.append(note); }
+  }
+}
+function openBoard() {
+  pause();
+  $('score-form').hidden = state.status !== 'over' || state.distance < .1 || submitted;
+  $('leaderboard-dialog').showModal(); loadRankings();
+}
+$('leaderboard-open').addEventListener('click', openBoard);
+$('save-score').addEventListener('click', openBoard);
+$('close-board').addEventListener('click', () => { if (!submitting) $('leaderboard-dialog').close(); });
+$('leaderboard-dialog').addEventListener('cancel', event => { if (submitting) event.preventDefault(); });
+$('refresh-board').addEventListener('click', loadRankings);
+$('refresh-dialog').addEventListener('click', loadRankings);
+$('score-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (submitting || submitted || state.status !== 'over') return;
+  submitting = true; $('submit-score').disabled = true; $('board-status').textContent = 'Checking your run…';
+  try {
+    const response = await fetch('/api/leaderboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: $('player-name').value, events: runEvents, ticks: runTicks }), signal: AbortSignal.timeout(15000) });
+    const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Could not submit. Please try again.');
+    submitted = true; renderRankings(data.scores); $('score-form').hidden = true; $('save-score').hidden = true;
+    $('board-status').textContent = `Saved! ${data.distance.toFixed(1)} m. Your best run per name is shown.`;
+    try { localStorage.setItem('hoof-player-name', $('player-name').value); } catch { /* Optional preference. */ }
+  } catch (error) { $('board-status').textContent = error.name === 'TimeoutError' ? 'Connection timed out. Refresh rankings before trying again.' : error.message; }
+  finally { submitting = false; $('submit-score').disabled = false; }
+});
+loadRankings();
 $('share').addEventListener('click', async () => {
   const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('beat', state.distance.toFixed(1));
   url.searchParams.set('v', '2');
@@ -134,22 +202,24 @@ function draw() {
   const sx = w / 1100, sy = h / 352;
   ctx.save(); ctx.scale(sx, sy);
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  ctx.fillStyle = '#edeedb'; ctx.fillRect(0, 0, 1100, 352);
+  const sky = ctx.createLinearGradient(0, 0, 0, 290); sky.addColorStop(0, '#c4eaff'); sky.addColorStop(1, '#e9f8ff');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 1100, 352);
   // A soft, uncluttered countryside, drawn in a little screen-printed palette.
-  ellipse(867, 88, 38, 38, '#e4e7bd');
-  path([[0,241],[108,203],[232,220],[344,192],[499,234],[659,206],[780,226],[955,185],[1100,215],[1100,352],[0,352]], null, 0, '#e1e5c9');
-  path([[0,264],[182,238],[300,253],[457,230],[645,258],[830,238],[1010,256],[1100,242],[1100,352],[0,352]], null, 0, '#d5ddba');
-  ctx.fillStyle = '#e5dfc7'; ctx.fillRect(0, 291, 1100, 61);
-  path([[0,291],[1100,291]], '#4d5540', 2);
-  const offset = state.distance * 26;
+  ellipse(870, 105, 31, 31, '#ffe397');
+  for (let i=0;i<3;i++) { const cx = ((i*420+80-state.distance*3)%1450+1450)%1450-100; ellipse(cx,115+i%2*25,65,13,'#ffffffb0'); ellipse(cx-20,107+i%2*25,28,18,'#ffffffb0'); ellipse(cx+15,104+i%2*25,30,22,'#ffffffb0'); }
+  path([[0,241],[108,203],[232,220],[344,192],[499,234],[659,206],[780,226],[955,185],[1100,215],[1100,352],[0,352]], null, 0, '#b2dfc6');
+  path([[0,264],[182,238],[300,253],[457,230],[645,258],[830,238],[1010,256],[1100,242],[1100,352],[0,352]], null, 0, '#99ce9b');
+  ctx.fillStyle = '#e9daa7'; ctx.fillRect(0, 291, 1100, 61);
+  ctx.fillStyle = '#b0d581'; ctx.fillRect(0,291,1100,7);
+  const offset = state.distance * 70;
   for (let i = -1; i < 13; i++) {
     const x = ((i * 117 - offset * .55) % 1404 + 1404) % 1404 - 120;
-    path([[x,282],[x-3,275],[x+2,279],[x+7,271]], '#a3ae7d', 1.6);
-    path([[x+45,310],[x+55,310]], '#c0b99d', 2);
+    path([[x,282],[x-3,275],[x+2,279],[x+7,271]], '#71aa69', 1.6);
+    path([[x+45,310],[x+55,310]], '#cbb980', 2);
   }
   for (let i = 0; i < 5; i++) {
     const x = ((i * 270 - offset * .3) % 1350 + 1350) % 1350 - 80;
-    path([[x,255],[x,229]], '#9ca77f', 3); path([[x-100,239],[x+100,239]], '#a9b18b', 2);
+    path([[x,270],[x,235]], '#f9f6df', 5); path([[x-100,246],[x+100,246]], '#f9f6df', 4);
   }
   const marker = ((1050 - offset) % 1300 + 1300) % 1300;
   path([[marker,290],[marker,253]], '#666b51', 3);
@@ -159,22 +229,26 @@ function draw() {
   const horseX = 525;
   const horseScale = Math.min(w * .82 / 330, h * .60 / 210);
   const running = state.status === 'running';
-  const bob = running ? Math.sin(state.time * 13) * Math.min(state.speed, 5) * .65 : Math.sin(visualTime * 1.8) * 1.4;
+  const moving = running && state.speed > .1;
+  const bob = moving ? Math.sin(gait * 2) * Math.min(state.speed + 1, 5) : Math.sin(visualTime * 1.8) * 1.4;
   ellipse(horseX, 291, 122, 9, '#535c3b20');
   ctx.save(); ctx.translate(horseX, 291); ctx.scale(horseScale / sx, horseScale / sy); ctx.translate(0, -76 + bob); ctx.rotate(state.status === 'over' ? Math.sign(state.tilt || 1) * .75 : state.tilt * .85);
   const leg = (index, hipX, back) => {
     const impulse = state.legs[index];
-    const stride = Math.sin(state.time * 6 + index * 2) * Math.min(state.speed, 4) * 1.5;
-    const kneeX = hipX + (index % 2 ? 12 : -9) + impulse * (index < 2 ? -28 : 28) + stride;
-    const kneeY = 46 - impulse * 11;
-    const footX = kneeX + (index % 2 ? -14 : 10) - impulse * 18;
-    const footY = 76 - impulse * 32;
+    const phase = gait + ([0, Math.PI, Math.PI, 0][index]);
+    const stride = moving ? Math.sin(phase) * 27 : 0;
+    const footX = hipX + stride + (index % 2 ? 12 : -6) + impulse * (index < 2 ? -13 : 13);
+    const footY = 76 - (moving ? Math.max(0, Math.cos(phase)) * 23 : 0) - impulse * 8;
+    const dx = footX - hipX, dy = footY - 10, length = Math.hypot(dx, dy);
+    const bend = Math.sqrt(Math.max(0, 39 * 39 - length * length / 4));
+    const kneeX = (hipX + footX) / 2 - dy / length * bend;
+    const kneeY = (10 + footY) / 2 + dx / length * bend;
     path([[hipX,10],[kneeX,kneeY],[footX,footY]], '#34362b', 14);
     path([[hipX,10],[kneeX,kneeY],[footX,footY]], COLORS[index], 9);
     // Keep every badge below the body, including the two far-side legs.
-    const badgeY = kneeY + 10;
-    ellipse(kneeX,badgeY,13,13,COLORS[index],'#34362b',2);
-    ctx.fillStyle = '#24251f'; ctx.font = 'bold 17px Arial'; ctx.textAlign = 'center'; ctx.fillText(String(index + 1), kneeX, badgeY + 6);
+    const badgeY = footY - 13;
+    ellipse(footX,badgeY,12,12,COLORS[index],'#34362b',2);
+    ctx.fillStyle = '#24251f'; ctx.font = 'bold 16px Arial'; ctx.textAlign = 'center'; ctx.fillText(String(index + 1), footX, badgeY + 6);
     round(footX-8,footY-3,22,10,3,'#34362b');
   };
   leg(1,-43,true); leg(3,90,true);
@@ -201,7 +275,11 @@ function draw() {
 function frame(now) {
   const dt = Math.min((now-last)/1000, .04); last=now; visualTime += dt;
   const wasRunning = state.status === 'running';
-  step(state, dt);
+  if (state.status === 'running') {
+    accumulator += dt;
+    while (accumulator >= .02 && state.status === 'running') { step(state, .02); runTicks++; accumulator -= .02; }
+    if (state.speed > .1) gait += dt * (8 + state.speed * 2.3);
+  } else accumulator = 0;
   const balance = Math.max(-100, Math.min(100, state.tilt / .68 * 100));
   $('balance-dot').style.left = `calc(${50 + balance * .45}% - 7px)`;
   $('balance').setAttribute('aria-valuenow', String(Math.round(balance)));

@@ -1,23 +1,45 @@
-# HOOF.
+# HOOF!
 
-Four legs. Zero coordination. A tiny, phone-friendly horse game with four individual leg controls, a local personal best, optional sound, and challenge links. No accounts, backend, API keys, or installation required to play.
+A phone-friendly four-button horse game with an arcade UI, optional sound, challenge links, and a shared top-10 leaderboard. No player accounts required.
 
 ## Develop on Windows or macOS
 
-Install Node.js 20 or newer, then from this folder run:
+Install Node.js 22.13 or newer (Node 24 recommended), then run from this folder:
 
 ```sh
 npm run dev
 ```
 
-Open http://localhost:4173. Edit `dist/index.html`, `dist/style.css`, and `dist/game.js` and refresh. There are no dependencies to install and no build step. `npm test` checks the game rules.
+Open http://localhost:4173. No dependencies to install. Edit `dist/index.html`, `dist/style.css`, and `dist/game.js`, then refresh. The local leaderboard uses SQLite in the ignored `.local/` folder and is separate from production.
+
+```sh
+npm run build
+npm test
+```
+
+The build embeds the client files and game rules into `dist/server/index.js`, a dependency-free Worker. Build before running tests, which also verify the generated Worker. Generated output is ignored by Git.
 
 ## Play
 
-Click **PLAY**, then tap the numbered colored buttons or press **Q W O P**. Match the numbers on the horse: 1 → 4 → 2 → 3 (Q → P → W → O) at roughly three taps per second. The portrait layout uses two rows of large buttons, horse diagrams, and a live balance meter. The horse loses speed quickly, trips on rushed taps, and gets tired over distance. Repeating a leg tips it over. After the first tap, stopping for 2.4 seconds ends the run; before the first tap there is a 4.5-second grace period. Switching tabs pauses the game. Best distance is saved only on the current browser. This harder ruleset uses a new record key and versioned challenge links so earlier, easier scores are kept separate. Scores are casual and not verified by a server.
+Tap **LET’S HOOF IT**, then tap 1 → 4 → 2 → 3 (keyboard Q → P → W → O) at about three taps per second. Numbered, colored legs match the buttons. Keep the balance dot near the middle. Rushed taps and repeated legs cause trips; the horse tires over distance. After the first tap, stopping for 2.4 seconds ends the run. Switching tabs pauses it. Animation and parallax move briskly while the input rhythm stays manageable.
 
-## Free hosting
+## Leaderboard
 
-The complete static site is in `dist/`. It runs on static hosting, including GitHub Pages. The repository workflow `.github/workflows/hoof-pages.yml` can deploy this folder through GitHub Pages when enabled: repository **Settings → Pages → Source → GitHub Actions**, then run **Deploy HOOF to GitHub Pages** from Actions. This workflow is manual so it will not replace an existing Pages site accidentally.
+After finishing, choose **Put my name on the board**, enter a name (1–16 letters/numbers, spaces, underscores, periods or hyphens), and submit. Names and distances are public. Top 10 shows the best run per case-insensitive name; names are display labels, not authenticated accounts. Personal best and remembered name are stored on the device.
 
-The game uses system font fallbacks if Google Fonts is unavailable. All horse art is drawn in Canvas. Audio is synthesized locally and starts only after enabling sound.
+The server replays recorded inputs on the same fixed 20 ms simulation used in the browser, so a client-provided score is never trusted. Incomplete runs, invalid timing, duplicate replay hashes, oversized requests, and excessive submissions are rejected. A name is not proof of identity, and scripted valid replays remain possible; this is a casual leaderboard, not a prize competition.
+
+## Hosting
+
+Live game: https://hoof-clement.smokygoose67.chatgpt.site
+
+Sites publishes the Worker with the D1 binding `DB`, declared in `.openai/hosting.json`. Schema migrations live in `drizzle/`; hosted deployment applies them. All image assets are embedded into the Worker during the build. Preserve this Site project ID on future updates. A static-only host such as GitHub Pages cannot run the shared leaderboard.
+
+The repository workflow checks the game and Worker without deploying the portfolio. All horse artwork is drawn in Canvas. Google Fonts has system fallbacks; optional audio is generated locally.
+
+## UI research
+
+The redesign applies visual hierarchy, contrast, restrained type sizes, and large separated touch controls:
+
+- https://www.nngroup.com/articles/principles-visual-design/
+- https://www.nngroup.com/articles/touch-target-size/
