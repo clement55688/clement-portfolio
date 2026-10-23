@@ -19,3 +19,7 @@
 .selection-details h2{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.game-card:focus-visible{outline:none}.game-card:focus-visible .slice-border path{stroke:#fff;stroke-width:1.4}
 
 .game-card.offscreen{opacity:0;pointer-events:none}
+
+/* One rotor and one pivot: neighboring panels keep their separation throughout motion. */
+.shelf{--wheel-pivot:565px;--slice-width:1}.wheel-rotor{position:absolute;inset:0;transform-origin:50% var(--wheel-pivot);will-change:transform}.wheel-rotor .game-card,.wheel-rotor .game-card:hover{width:calc(450px * var(--slice-width));transform:translateX(-50%) rotate(var(--panel-angle));transition:none!important;z-index:1;will-change:auto}.wheel-rotor .game-card.featured{z-index:1;filter:none}.wheel-rotor .game-card .slice-border path{transition:stroke-opacity .2s;stroke-opacity:.55;stroke-width:.6}.wheel-rotor .game-card.featured .slice-border path{stroke-opacity:1;stroke-width:.85}.wheel-rotor .game-card[aria-hidden=true]{pointer-events:none}
+@media(min-width:1200px){.shelf{--wheel-pivot:558px}}@media(min-width:901px){.shelf{--wheel-pivot:549px}}@media(max-width:900px){.shelf{--wheel-pivot:515px}.wheel-rotor .game-card,.wheel-rotor .game-card:hover{width:calc(410px * var(--slice-width))}}@media(max-width:580px){.shelf{--wheel-pivot:414px}.wheel-rotor .game-card,.wheel-rotor .game-card:hover{width:calc(310px * var(--slice-width))}}

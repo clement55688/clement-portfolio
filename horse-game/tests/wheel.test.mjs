@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { wrap, nearestGame, advanceSpring } from '../dist/wheel-motion.mjs';
+function settle(s){for(let i=0;i<240;i++)advanceSpring(s,1/60);}
+test('rotation settles onto its detent without overshooting',()=>{const s={position:0,target:1,velocity:0};let previous=0;for(let i=0;i<180;i++){advanceSpring(s,1/60);assert.ok(s.position>=previous);assert.ok(s.position<=1);previous=s.position;}assert.equal(s.position,1);assert.equal(s.velocity,0);});
+test('rapid reversal preserves position and velocity rather than teleporting a panel',()=>{const s={position:0,target:1,velocity:0};for(let i=0;i<8;i++)advanceSpring(s,1/60);const position=s.position,velocity=s.velocity;s.target=-1;assert.equal(s.position,position);assert.equal(s.velocity,velocity);advanceSpring(s,1/120);assert.ok(Math.abs(s.position-position)<.08);settle(s);assert.equal(s.position,-1);});
+test('wraparound uses unbounded rotation with fixed angular separation on the wheel',()=>{const s={position:0,target:0,velocity:0};for(let n=1;n<=12;n++){s.target=n;for(let i=0;i<90;i++){const old=s.position;advanceSpring(s,1/60);assert.ok(Math.abs(s.position-old)<.16);const angle=-s.position*60;assert.ok(Math.abs(((60+angle)-angle)-60)<1e-9);}assert.equal(wrap(Math.round(s.position),3),n%3);}settle(s);assert.equal(s.position,12);});
+test('direct selection takes the nearest equivalent game in either direction',()=>{assert.equal(nearestGame(0,2,3),-1);assert.equal(nearestGame(2,0,3),3);assert.equal(nearestGame(6,1,3),7);assert.equal(wrap(-1,3),2);});
+test('spring remains finite after frame delays and respects the elapsed-time cap',()=>{const a={position:0,target:4,velocity:0},b={...a};advanceSpring(a,20);advanceSpring(b,.05);assert.deepEqual(a,b);settle(a);assert.equal(a.position,4);});
