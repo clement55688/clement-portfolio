@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hoof-game",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-10-22",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hoof-leaderboard",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}
