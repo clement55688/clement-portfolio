@@ -1,12 +1,20 @@
 import { readFile, mkdir, writeFile, readdir } from 'node:fs/promises';
 const root = new URL('./', import.meta.url);
-const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp' };
 const assets = {};
-for (const name of await readdir(new URL('dist/', root))) {
-  const ext = name.slice(name.lastIndexOf('.'));
-  if (!mime[ext]) continue;
-  assets[`/${name}`] = { type: mime[ext], data: (await readFile(new URL(`dist/${name}`, root))).toString('base64') };
+async function collect(directory, prefix = '') {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    if (entry.name === 'server' || entry.name === '.openai') continue;
+    const relative = `${prefix}${entry.name}`;
+    const target = new URL(`dist/${relative}`, root);
+    if (entry.isDirectory()) await collect(target, `${relative}/`);
+    else {
+      const ext = entry.name.slice(entry.name.lastIndexOf('.'));
+      if (mime[ext]) assets[`/${relative.replaceAll('\\', '/')}`] = { type: mime[ext], data: (await readFile(target)).toString('base64') };
+    }
+  }
 }
+await collect(new URL('dist/', root));
 let worker = await readFile(new URL('worker/index.js', root), 'utf8');
 worker = worker.replace(/import \{[^}]+\} from '\.\.\/dist\/core.mjs';/, await readFile(new URL('dist/core.mjs', root), 'utf8'));
 worker = worker.replace('/* ASSETS */', `const ASSETS = ${JSON.stringify(assets)};`);

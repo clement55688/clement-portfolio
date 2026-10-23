@@ -66,7 +66,8 @@ export default {
     const pathname = new URL(request.url).pathname;
     try {
       if (pathname.startsWith('/api/')) return await handleApi(request, env);
-      const asset = ASSETS[pathname === '/' ? '/index.html' : pathname];
+      const assetPath = pathname === '/' ? '/index.html' : pathname.endsWith('/') ? `${pathname}index.html` : pathname;
+      const asset = ASSETS[assetPath];
       if (!asset) return new Response('Not found', { status: 404 });
       return new Response(Uint8Array.from(atob(asset.data), c => c.charCodeAt(0)), { headers: { 'Content-Type': asset.type, 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' } });
     } catch { return json({ error: 'Leaderboard is taking a grass break. Please try again.' }, 503); }

@@ -6,7 +6,7 @@ import { mkdirSync } from 'node:fs';
 import { localDatabase } from './local-db.mjs';
 import { handleApi } from './worker/index.js';
 const root = fileURLToPath(new URL('./dist/', import.meta.url));
-const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const mime = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp' };
 const port = Number(process.env.PORT || 4173);
 mkdirSync(new URL('./.local/', import.meta.url), { recursive: true });
 const DB = localDatabase(new URL('./.local/scores.sqlite', import.meta.url));
@@ -20,7 +20,8 @@ createServer(async (req, res) => {
       const result = await handleApi(request, { DB });
       res.writeHead(result.status, Object.fromEntries(result.headers)); res.end(Buffer.from(await result.arrayBuffer())); return;
     }
-    const target = path.resolve(root, `.${pathname === '/' ? '/index.html' : pathname}`);
+    const requested = pathname === '/' ? '/index.html' : pathname.endsWith('/') ? `${pathname}index.html` : pathname;
+    const target = path.resolve(root, `.${requested}`);
     if (!target.startsWith(root)) { res.writeHead(403); res.end('Forbidden'); return; }
     const data = await readFile(target);
     res.writeHead(200, { 'Content-Type': `${mime[path.extname(target)] || 'application/octet-stream'}; charset=utf-8`, 'Cache-Control': 'no-cache' }); res.end(data);

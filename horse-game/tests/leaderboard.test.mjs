@@ -59,10 +59,12 @@ test('rejects cross-origin writes, bad names, malformed payloads, and excessive 
     assert.equal((await handleApi(post({ ...replay(9), name: 'TooMany' }), { DB })).status, 429);
   } finally { DB.close(); }
 });
-test('generated Worker embeds the site and serves API errors honestly without a database', async () => {
+test('generated Worker embeds the arcade and HOOF while serving API errors honestly without a database', async () => {
   const { default: generated } = await import('../dist/server/index.js');
   const response = await generated.fetch(new Request('https://hoof.test/'), {});
-  assert.equal(response.status, 200); assert.match(await response.text(), /Hoof of fame/);
+  assert.equal(response.status, 200); assert.match(await response.text(), /CATVOLUTION 2048/);
+  const hoof = await generated.fetch(new Request('https://hoof.test/hoof/'), {});
+  assert.equal(hoof.status, 200); assert.match(await hoof.text(), /Hoof of fame/);
   const missing = await worker.fetch(new Request('https://hoof.test/api/leaderboard'), {}); assert.equal(missing.status, 503);
 });
 test('older scores remain stored but do not compete with the new trail rules', async () => {
