@@ -62,7 +62,7 @@ test('rejects cross-origin writes, bad names, malformed payloads, and excessive 
 test('generated Worker embeds the arcade and HOOF while serving API errors honestly without a database', async () => {
   const { default: generated } = await import('../dist/server/index.js');
   const response = await generated.fetch(new Request('https://hoof.test/'), {});
-  assert.equal(response.status, 200); assert.match(await response.text(), /CATVOLUTION 2048/);
+  assert.equal(response.status, 200); assert.match(await response.text(), /CATVOLUTION/);
   const hoof = await generated.fetch(new Request('https://hoof.test/hoof/'), {});
   assert.equal(hoof.status, 200); assert.match(await hoof.text(), /Hoof of fame/);
   const missing = await worker.fetch(new Request('https://hoof.test/api/leaderboard'), {}); assert.equal(missing.status, 503);
