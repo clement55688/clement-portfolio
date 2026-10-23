@@ -2,6 +2,13 @@ import { sectorGeometry } from './wheel-geometry.mjs';
 import { wrap, nearestGame, advanceSpring } from './wheel-motion.mjs';
 const shelf = document.querySelector('#shelf');
 const cards = [...shelf.querySelectorAll('.game-card')];
+const dotsContainer = document.querySelector('.dots');
+while (dotsContainer.children.length < cards.length) {
+  const dot = document.createElement('button');
+  dot.setAttribute('aria-label', `Show ${cards[dotsContainer.children.length].querySelector('h3').textContent.trim()}`);
+  dot.setAttribute('aria-pressed', 'false');
+  dotsContainer.append(dot);
+}
 const dots = [...document.querySelectorAll('.dots button')];
 const names = cards.map(card => card.querySelector('h3').textContent.trim());
 const descriptions = cards.map(card => [...card.querySelector('.card-copy > p').childNodes].map(node => node.nodeName === 'BR' ? ' ' : node.textContent).join('').trim());
