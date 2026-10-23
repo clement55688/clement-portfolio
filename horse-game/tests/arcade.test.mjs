@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../dist/server/index.js';
-test('all three game entries and their linked local artwork, scripts, and styles are packaged',async()=>{
-  for(const route of ['/', '/hoof/', '/catvolution/', '/frog/']){
+test('all game entries and their linked local artwork, scripts, and styles are packaged',async()=>{
+  for(const route of ['/', '/hoof/', '/catvolution/', '/frog/', '/cabin-chaos/', '/ten-seconds/', '/sneaky-scratch/']){
     const url=new URL(route,'https://arcade.test');
     const response=await worker.fetch(new Request(url),{});
     assert.equal(response.status,200,route);
