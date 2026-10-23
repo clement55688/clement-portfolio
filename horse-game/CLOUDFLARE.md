@@ -1,6 +1,6 @@
 # GitHub → Cloudflare deployment
 
-The repository is prepared for Cloudflare Workers Builds. Connecting the account and creating the database are still required; this file is not confirmation of a live Cloudflare deployment.
+The repository is prepared for Cloudflare Workers Builds. The Cloudflare account and `hoof-leaderboard` D1 database are configured in `wrangler.jsonc`. GitHub authorization, project creation, and the first build are still required; this file is not confirmation of a live Cloudflare deployment.
 
 Use these project settings:
 
@@ -16,7 +16,7 @@ Use these project settings:
 | Node version | `24` (also declared in `.node-version`) |
 | Package manager | `pnpm@11.19.0` |
 
-Create a D1 database named `hoof-leaderboard` in the same Cloudflare account. Copy its real database UUID into the `DB` entry as `database_id` in `wrangler.jsonc`, then commit that change before connecting automatic deployment. The UUID is an identifier, not a secret. No API token belongs in source control.
+The database UUID and account ID in `wrangler.jsonc` were read from the signed-in Cloudflare dashboard. These identifiers are not secrets. No API token belongs in source control. Finish connecting the repository through Workers & Pages, then use the settings above for the first build.
 
 The deployment command applies the SQL migrations in `drizzle/` before publishing the Worker. It refuses to deploy without a configured database, so the leaderboard cannot silently launch without storage. The Cloudflare build must pass the game and API checks before deployment. Turn off automatic deployments from non-production branches unless separate preview resources are configured.
 
