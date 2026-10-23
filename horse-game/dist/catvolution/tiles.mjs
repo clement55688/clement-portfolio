@@ -1,3 +1,13 @@
+export function createFace(value, coat){
+  const inner=document.createElement('div');inner.className='tile-inner';
+  const art=document.createElement('div');art.className='cat-watermark';art.setAttribute('aria-hidden','true');
+  const cat=document.createElement('img');cat.className='tile-cat';cat.alt='';cat.draggable=false;
+  const stage=value>=512?'-giant':value>=32?'-adult':'';
+  cat.src=`cats/${coat}${stage}.webp`;
+  art.append(cat);
+  const number=document.createElement('b');number.className='value';number.textContent=String(value);
+  inner.append(art,number);return inner;
+}
 // Separate the stationary grid from the moving numbered tiles, as in classic 2048.
 export function createTiles(element){
   element.replaceChildren();
@@ -12,7 +22,7 @@ export function createTiles(element){
     board.forEach((tile,index)=>{
       if(!tile)return;
       let node=nodes.get(tile.id);
-      if(!node){node=document.createElement('div');node.className=`tile v${Math.min(tile.value,2048)}`;node.dataset.tileId=String(tile.id);node.setAttribute('aria-label',String(tile.value));const inner=document.createElement('div');inner.className='tile-inner';const value=document.createElement('b');value.className='value';value.textContent=String(tile.value);inner.append(value);node.append(inner);nodes.set(tile.id,node);layer.append(node);
+      if(!node){node=document.createElement('div');node.className=`tile v${Math.min(tile.value,2048)}`;node.dataset.tileId=String(tile.id);node.setAttribute('aria-label',String(tile.value));const inner=createFace(tile.value,tile.coat);node.append(inner);nodes.set(tile.id,node);layer.append(node);
         if(mergedIds.includes(tile.id))inner.classList.add('tile-merged');else if(newIds.includes(tile.id))inner.classList.add('tile-new');
       }
       position(node,index);

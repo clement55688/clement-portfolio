@@ -1,4 +1,4 @@
-import {createTiles} from './tiles.mjs';
+import {createTiles,createFace} from './tiles.mjs';
 import{BASE_COATS,COATS,EVOLUTION,newGame,move,spawn,canMove}from'./core.mjs';
 const $=id=>document.getElementById(id),KEY='catvolution.v2';let starter=null,board=[],score=0,undo=null,sound=true,audio;
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');sound=s.sound!==false;starter=COATS[s.starter]?s.starter:null;$('best').textContent=Number(s.best)||0}catch{}}
@@ -8,9 +8,9 @@ function beep(){if(!sound)return;try{audio??=new AudioContext();const o=audio.cr
 function renderOptions(){$('cat-options').innerHTML=BASE_COATS.map(c=>`<button class="cat-card" data-coat="${c}" aria-pressed="${starter===c}"><img src="${image(c)}" alt="${COATS[c][0]}"><div><strong>${COATS[c][0]}</strong><span>${COATS[c][1]}</span></div></button>`).join('');document.querySelectorAll('[data-coat]').forEach(b=>b.onclick=()=>{starter=b.dataset.coat;save();renderOptions();$('start').disabled=false})}
 const tiles=createTiles($('board'));let busy=false,queued=[],epoch=0;
 function resetMotion(){epoch++;busy=false;queued=[];tiles.clear();}
-function renderGuide(){$('collection-grid').replaceChildren();for(const value of Object.keys(EVOLUTION).map(Number)){const card=document.createElement('article');card.className='number-guide';const swatch=document.createElement('div');swatch.className=`tile v${value}`;const inner=document.createElement('div');inner.className='tile-inner';inner.textContent=value;swatch.append(inner);card.append(swatch);$('collection-grid').append(card);}}
+function renderGuide(){$('collection-grid').replaceChildren();for(const value of Object.keys(EVOLUTION).map(Number)){const card=document.createElement('article');card.className='number-guide';const swatch=document.createElement('div');swatch.className=`tile v${value}`;const inner=createFace(value,starter||'orange');swatch.append(inner);card.append(swatch);$('collection-grid').append(card);}}
 function render(options={}){const max=Math.max(2,...board.filter(Boolean).map(t=>t.value));tiles.sync(board,options);$('score').textContent=score;$('best').textContent=Math.max(Number($('best').textContent)||0,score);$('highest').textContent=max;$('undo').disabled=!undo;save();}
-function begin(){if(!starter)return;resetMotion();board=newGame(starter);score=0;undo=null;$('select-screen').hidden=true;$('game-screen').hidden=false;$('status').textContent='Swipe or use arrow keys. Match numbers. Reach 2048.';render({newIds:board.filter(Boolean).map(t=>t.id)});}
+function begin(){if(!starter)return;for(const stage of ['adult','giant']){const preload=new Image();preload.src=`cats/${starter}-${stage}.webp`;}resetMotion();board=newGame(starter);score=0;undo=null;$('select-screen').hidden=true;$('game-screen').hidden=false;$('status').textContent='Swipe or use arrow keys. Match numbers. Reach 2048.';render({newIds:board.filter(Boolean).map(t=>t.id)});}
 async function act(direction){
   if(document.querySelector('dialog[open]')||$('game-screen').hidden)return;
   if(busy){if(queued.length<4)queued.push(direction);return;}
