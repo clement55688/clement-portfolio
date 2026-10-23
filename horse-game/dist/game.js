@@ -1,4 +1,4 @@
-import { createRun, tapLeg, step, ORDER, COLORS } from './core.mjs';
+import { createRun, tapLeg, step, ORDER, COLORS, RECORD_KEY } from './core.mjs';
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene');
@@ -11,9 +11,10 @@ let audio;
 let last = performance.now();
 let visualTime = 0;
 let shareTimer;
-try { const stored = Number(localStorage.getItem('hoof-best-v1')); if (Number.isFinite(stored) && stored > 0) best = stored; } catch { /* Private browsing still works. */ }
+try { const stored = Number(localStorage.getItem(RECORD_KEY)); if (Number.isFinite(stored) && stored > 0) best = stored; } catch { /* Private browsing still works. */ }
 $('best').textContent = `${best.toFixed(1)} m`;
-const target = Number(new URL(location.href).searchParams.get('beat'));
+const challengeUrl = new URL(location.href);
+const target = challengeUrl.searchParams.get('v') === '2' ? Number(challengeUrl.searchParams.get('beat')) : 0;
 if (Number.isFinite(target) && target > 0) $('challenge').textContent = `FRIEND TO BEAT: ${target.toFixed(1)} m`;
 
 function beep(freq, duration = .07) {
@@ -38,20 +39,20 @@ function start() {
   $('overlay').hidden = true;
   $('share').hidden = true;
   $('share').textContent = 'Challenge a friend ↗';
-  $('feedback').textContent = 'Start with back left. Then front right. You got this.';
+  $('feedback').textContent = 'Tap 1 → 4 → 2 → 3. Keep a steady rhythm.';
   buttons.forEach(b => b.classList.remove('pressed'));
   last = performance.now(); hint(); beep(330);
 }
 function end() {
   if (state.distance > best) {
     best = state.distance;
-    try { localStorage.setItem('hoof-best-v1', best.toFixed(4)); } catch { /* Keep the session record. */ }
+    try { localStorage.setItem(RECORD_KEY, best.toFixed(4)); } catch { /* Keep the session record. */ }
     $('best').textContent = `${best.toFixed(1)} m`;
   }
-  $('overlay-label').textContent = 'A MAJESTIC ATTEMPT';
-  $('overlay-title').textContent = `${state.distance.toFixed(1)} meters of glory.`;
+  $('overlay-label').textContent = state.distance >= 10 ? 'YOU MADE IT PAST 10 M!' : 'SO CLOSE. ONE MORE TRY?';
+  $('overlay-title').textContent = `${state.distance.toFixed(1)} meters!`;
   $('overlay-copy').textContent = state.reason;
-  $('start').innerHTML = 'ONE MORE TROT <span aria-hidden="true">↗</span>';
+  $('start').innerHTML = 'TRY AGAIN <span aria-hidden="true">↗</span>';
   $('overlay').hidden = false; $('share').hidden = false;
   $('feedback').textContent = state.reason;
   hint(); beep(120, .25);
@@ -88,10 +89,10 @@ $('sound').addEventListener('click', () => {
 function pause() {
   if (state.status !== 'running') return;
   state.status = 'paused';
-  $('overlay-label').textContent = 'QUICK GRASS BREAK';
-  $('overlay-title').textContent = 'Hold your horses.';
-  $('overlay-copy').textContent = 'Your run is paused. Your dignity is safe. For now.';
-  $('start').innerHTML = 'KEEP TROTTING <span aria-hidden="true">↗</span>';
+  $('overlay-label').textContent = 'PAUSED';
+  $('overlay-title').textContent = 'Grass break.';
+  $('overlay-copy').textContent = 'Your horse can wait.';
+  $('start').innerHTML = 'CONTINUE <span aria-hidden="true">↗</span>';
   $('share').hidden = true; $('overlay').hidden = false; hint();
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
@@ -101,6 +102,7 @@ $('close-help').addEventListener('click', () => $('help-dialog').close());
 $('got-it').addEventListener('click', () => $('help-dialog').close());
 $('share').addEventListener('click', async () => {
   const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('beat', state.distance.toFixed(1));
+  url.searchParams.set('v', '2');
   const text = `I got a horse ${state.distance.toFixed(1)} meters before gravity won. Beat that. 🐴`;
   try {
     if (navigator.share) await navigator.share({ title: 'HOOF. — Beat my horse', text, url: url.href });
@@ -153,14 +155,13 @@ function draw() {
   path([[marker,290],[marker,253]], '#666b51', 3);
   round(marker-19, 237, 38, 22, 3, '#f8f3d9', '#666b51', 1.5);
   ctx.fillStyle = '#666b51'; ctx.font = '10px monospace'; ctx.textAlign = 'center'; ctx.fillText(`${Math.floor(state.distance / 50) * 50 + 50}m`, marker, 252);
-  // Keep the complete horse visible on narrow screens.
-  const mobile = w < 700;
-  const horseX = mobile ? 490 : 425;
-  const horseScale = mobile ? 1.18 : 1;
+  // Scale the horse uniformly: portrait screens must not squash it horizontally.
+  const horseX = 525;
+  const horseScale = Math.min(w * .82 / 330, h * .60 / 210);
   const running = state.status === 'running';
   const bob = running ? Math.sin(state.time * 13) * Math.min(state.speed, 5) * .65 : Math.sin(visualTime * 1.8) * 1.4;
   ellipse(horseX, 291, 122, 9, '#535c3b20');
-  ctx.save(); ctx.translate(horseX, 212 + bob); ctx.scale(horseScale, 1); ctx.rotate(state.status === 'over' ? Math.sign(state.tilt || 1) * .55 : state.tilt * .65);
+  ctx.save(); ctx.translate(horseX, 291); ctx.scale(horseScale / sx, horseScale / sy); ctx.translate(0, -76 + bob); ctx.rotate(state.status === 'over' ? Math.sign(state.tilt || 1) * .75 : state.tilt * .85);
   const leg = (index, hipX, back) => {
     const impulse = state.legs[index];
     const stride = Math.sin(state.time * 6 + index * 2) * Math.min(state.speed, 4) * 1.5;
@@ -169,11 +170,14 @@ function draw() {
     const footX = kneeX + (index % 2 ? -14 : 10) - impulse * 18;
     const footY = 76 - impulse * 32;
     path([[hipX,10],[kneeX,kneeY],[footX,footY]], '#34362b', 14);
-    path([[hipX,10],[kneeX,kneeY],[footX,footY]], back ? '#b79363' : '#cfad79', 9);
-    ellipse(kneeX,kneeY,6,6,COLORS[index],'#34362b',2);
+    path([[hipX,10],[kneeX,kneeY],[footX,footY]], COLORS[index], 9);
+    // Keep every badge below the body, including the two far-side legs.
+    const badgeY = kneeY + 10;
+    ellipse(kneeX,badgeY,13,13,COLORS[index],'#34362b',2);
+    ctx.fillStyle = '#24251f'; ctx.font = 'bold 17px Arial'; ctx.textAlign = 'center'; ctx.fillText(String(index + 1), kneeX, badgeY + 6);
     round(footX-8,footY-3,22,10,3,'#34362b');
   };
-  leg(1,-66,true); leg(3,63,true);
+  leg(1,-43,true); leg(3,90,true);
   // Tail, loaf-shaped body, and an entirely unqualified head.
   path([[-96,-28],[-120,-35],[-132,-16],[-129,7],[-146,22]], '#34362b', 15);
   path([[-95,-28],[-118,-32],[-126,-13],[-123,8],[-140,22]], '#504332', 8);
@@ -188,8 +192,7 @@ function draw() {
   path([[96,-98],[110,-101]], '#34362b',3);
   // A tiny saddle blanket and color-coded joints match the buttons.
   round(-38,-57,73,31,7,'#fa876d','#34362b',3);path([[-31,-48],[25,-48]], '#f5c3a1',2);
-  leg(0,-72,false);leg(2,60,false);
-  ellipse(-73,15,7,7,COLORS[0],'#34362b',2);ellipse(60,15,7,7,COLORS[2],'#34362b',2);
+  leg(0,-83,false);leg(2,43,false);
   if (state.status === 'over') { ctx.font = '24px sans-serif';ctx.fillStyle='#34362b';ctx.fillText('✳',157,-109);ctx.fillText('✳',135,-130); }
   ctx.restore();
   if (running && state.speed > 2) for (let i=0;i<3;i++) ellipse(horseX-130-i*20-(state.time*40)%20,286-i*2,6-i,3,'#c3b99566');
@@ -199,6 +202,9 @@ function frame(now) {
   const dt = Math.min((now-last)/1000, .04); last=now; visualTime += dt;
   const wasRunning = state.status === 'running';
   step(state, dt);
+  const balance = Math.max(-100, Math.min(100, state.tilt / .68 * 100));
+  $('balance-dot').style.left = `calc(${50 + balance * .45}% - 7px)`;
+  $('balance').setAttribute('aria-valuenow', String(Math.round(balance)));
   if (wasRunning) { $('distance').innerHTML = `${state.distance.toFixed(1)}<span>m</span>`; if (state.status === 'over') end(); else $('feedback').textContent = state.feedback; }
   draw(); requestAnimationFrame(frame);
 }

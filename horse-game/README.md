@@ -14,7 +14,7 @@ Open http://localhost:4173. Edit `dist/index.html`, `dist/style.css`, and `dist/
 
 ## Play
 
-Click **LET’S TROT**, then tap the colored buttons or press **Q W O P**. Try Q → P → W → O at roughly three taps per second. Diagonal strides build speed; repeating one leg tips the horse. After 4.5 seconds without a tap the run ends. Switching tabs pauses the game. Best distance is saved only on the current browser. A challenge link includes the distance to beat; scores are casual and not verified by a server.
+Click **PLAY**, then tap the numbered colored buttons or press **Q W O P**. Match the numbers on the horse: 1 → 4 → 2 → 3 (Q → P → W → O) at roughly three taps per second. The portrait layout uses two rows of large buttons, horse diagrams, and a live balance meter. The horse loses speed quickly, trips on rushed taps, and gets tired over distance. Repeating a leg tips it over. After the first tap, stopping for 2.4 seconds ends the run; before the first tap there is a 4.5-second grace period. Switching tabs pauses the game. Best distance is saved only on the current browser. This harder ruleset uses a new record key and versioned challenge links so earlier, easier scores are kept separate. Scores are casual and not verified by a server.
 
 ## Free hosting
 
