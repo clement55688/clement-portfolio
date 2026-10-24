@@ -1,0 +1,25 @@
+# Keep horse-game/dist visible: it contains the editable game source.
+**/node_modules/
+**/.git/
+**/.next/
+/out/
+/build/
+/coverage/
+/horse-game/dist/server/
+/horse-game/dist/.openai/
+**/.wrangler/
+**/.local/
+**/.vercel/
+/tmp/
+/work/
+**/.env*
+!**/.env.example
+**/.dev.vars*
+**/*.pem
+**/*.key
+**/*.sqlite*
+**/*.log
+**/*.tsbuildinfo
+**/pnpm-lock.yaml
+**/package-lock.json
+/public/maplibre-gl-*.mjs

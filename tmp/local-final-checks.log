@@ -1,0 +1,129 @@
+Already up to date
+Done in 642ms using pnpm v11.19.0
+$ pnpm run lint && pnpm run build && pnpm run test:games
+$ eslint
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\frog\game.js
+  7:355  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\hoof\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\server\index.js
+  160:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\sneaky-scratch\game.js
+  1:35  warning  'timingForLevel' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\ten-seconds\game.js
+  11:1030  warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\worker\index.js
+  78:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\frog\game.js
+  2:153  warning  'shared' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\hoof\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\server\index.js
+  146:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\worker\index.js
+  64:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+✖ 12 problems (0 errors, 12 warnings)
+
+$ next build
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 54ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1133ms
+  Running TypeScript ...
+  Finished TypeScript in 4.6s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/15) ...
+  Generating static pages using 15 workers (3/15) 
+  Generating static pages using 15 workers (7/15) 
+  Generating static pages using 15 workers (11/15) 
+✓ Generating static pages using 15 workers (15/15) in 1075ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/guestbook
+├ ƒ /api/scores
+├ ƒ /api/snow
+├ ƒ /api/status
+├ ƒ /api/views
+├ ○ /opengraph-image
+├ ○ /playground/leaderboard
+├ ○ /playground/snake
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└ ○ /snow-signal
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+$ pnpm --dir horse-game run check
+$ node build.mjs && node --test tests/*.test.mjs
+Built HOOF worker and embedded game assets.
+✔ all game entries and their linked local artwork, scripts, and styles are packaged (185.558ms)
+✔ every merge milestone has a unique named cat and later values retain the final form (1.8332ms)
+✔ the generated transparent cat sheet is packaged as an actual WebP asset (30.2873ms)
+✔ equal cats grow once and keep the selected coat (5.6026ms)
+✔ different values do not merge (0.5616ms)
+✔ spawn happens in an empty cell (0.4211ms)
+✔ both merging tiles slide into the same destination before the result appears (0.5314ms)
+✔ movement traces preserve tile identities in all four swipe directions (0.5409ms)
+✔ idling cannot score and the first input has a forgiving grace period (5.0833ms)
+✔ a comfortable novice pace clears the meadow and both first hills (9.136ms)
+✔ the horse settles itself and a single mistaken step is recoverable (1.7735ms)
+✔ continually repeating one leg causes a fall instead of free forward movement (1.3632ms)
+✔ button mashing scores less than a comfortable rhythm (2.1965ms)
+✔ stopping ends the run, while a paced run can reach the 90-second finish (6.0563ms)
+✔ terrain changes every 40m, has smooth boundaries, and gets steeper each lap (0.5103ms)
+✔ visible uphill gravity slows the horse and downhill gravity accelerates it (0.547ms)
+✔ inactive games ignore inputs and simultaneous taps earn no extra movement (0.9712ms)
+✔ alternating front hands produces steady swimming (3.3746ms)
+✔ repeating one front hand breaks combo instead of granting free speed (0.3588ms)
+✔ rear legs charge while held and release into a powered leap (0.6048ms)
+✔ a quick rear-foot tap does not create a fake leap (0.3033ms)
+✔ pause and cancelled controls safely discard stored charge (15.6182ms)
+✔ current, steering, and obstacles stay deterministic and bounded (0.7257ms)
+✔ server calculates a completed run from inputs and rejects forged or unfinished runs (9.7904ms)
+✔ SQLite stores real scores, deduplicates runs, normalizes names, and ignores a forged score (110.516ms)
+✔ global board is limited to ten names and sorted by verified distance (54.2732ms)
+✔ rejects cross-origin writes, bad names, malformed payloads, and excessive submissions (19.6035ms)
+✔ generated Worker embeds the arcade and HOOF while serving API errors honestly without a database (27.6335ms)
+✔ older scores remain stored but do not compete with the new trail rules (3.7734ms)
+✔ difficulty adds watchers and shortens safe time as score rises (2.2082ms)
+✔ watchers clearly progress from away to warning to watching (0.5858ms)
+✔ a scratch is only caught while at least one owner is watching (0.3324ms)
+✔ online timer rooms create, join, synchronize, accept one tap, and reveal rankings (100.956ms)
+✔ room controls reject strangers and mid-round joins (12.6448ms)
+✔ slice edges lie on exact circles around the rotation pivot at every supported size (2.2943ms)
+✔ rotation settles onto its detent without overshooting (5.5107ms)
+✔ rapid reversal preserves position and velocity rather than teleporting a panel (0.6789ms)
+✔ wraparound uses unbounded rotation with fixed angular separation on the wheel (3.5839ms)
+✔ direct selection takes the nearest equivalent game in either direction (0.596ms)
+✔ spring remains finite after frame delays and respects the elapsed-time cap (5.7234ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 512.5263

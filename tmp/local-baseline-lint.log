@@ -1,0 +1,40 @@
+$ eslint
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\frog\game.js
+  7:355  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\hoof\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\server\index.js
+  160:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\sneaky-scratch\game.js
+  1:35  warning  'timingForLevel' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\dist\ten-seconds\game.js
+  11:1030  warning  Do not use `location.href` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\horse-game\worker\index.js
+  78:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\frog\game.js
+  2:153  warning  'shared' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\hoof\game.js
+  240:29  warning  'back' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\dist\server\index.js
+  146:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+C:\Users\Clement\Documents\ChatGPT\github profolio\work\wheel-release\horse-game\worker\index.js
+  64:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+✖ 12 problems (0 errors, 12 warnings)
+

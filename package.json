@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "setup:local": "node scripts/setup-local.mjs",
+    "dev:games": "pnpm --dir clement-arcade run dev",
+    "build:games": "pnpm --dir clement-arcade run build",
+    "test:games": "pnpm --dir clement-arcade run check",
+    "test": "pnpm run test:games",
+    "check:all": "pnpm run lint && pnpm run build && pnpm run test:games"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.9",

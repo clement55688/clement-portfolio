@@ -1,0 +1,50 @@
+$ node build.mjs && node --test tests/*.test.mjs
+Built HOOF worker and embedded game assets.
+✔ all game entries and their linked local artwork, scripts, and styles are packaged (386.9799ms)
+✔ every merge milestone has a unique named cat and later values retain the final form (2.0767ms)
+✔ the generated transparent cat sheet is packaged as an actual WebP asset (90.3219ms)
+✔ equal cats grow once and keep the selected coat (5.8712ms)
+✔ different values do not merge (10.3636ms)
+✔ spawn happens in an empty cell (0.7949ms)
+✔ both merging tiles slide into the same destination before the result appears (1.3417ms)
+✔ movement traces preserve tile identities in all four swipe directions (0.6495ms)
+✔ idling cannot score and the first input has a forgiving grace period (6.5588ms)
+✔ a comfortable novice pace clears the meadow and both first hills (14.5903ms)
+✔ the horse settles itself and a single mistaken step is recoverable (2.6316ms)
+✔ continually repeating one leg causes a fall instead of free forward movement (0.8235ms)
+✔ button mashing scores less than a comfortable rhythm (4.2376ms)
+✔ stopping ends the run, while a paced run can reach the 90-second finish (7.0781ms)
+✔ terrain changes every 40m, has smooth boundaries, and gets steeper each lap (0.4423ms)
+✔ visible uphill gravity slows the horse and downhill gravity accelerates it (0.4678ms)
+✔ inactive games ignore inputs and simultaneous taps earn no extra movement (0.4922ms)
+✔ alternating front hands produces steady swimming (6.0201ms)
+✔ repeating one front hand breaks combo instead of granting free speed (2.5036ms)
+✔ rear legs charge while held and release into a powered leap (0.7555ms)
+✔ a quick rear-foot tap does not create a fake leap (0.3001ms)
+✔ pause and cancelled controls safely discard stored charge (1.7212ms)
+✔ current, steering, and obstacles stay deterministic and bounded (0.3912ms)
+✔ server calculates a completed run from inputs and rejects forged or unfinished runs (14.5719ms)
+✔ SQLite stores real scores, deduplicates runs, normalizes names, and ignores a forged score (174.3639ms)
+✔ global board is limited to ten names and sorted by verified distance (286.9551ms)
+✔ rejects cross-origin writes, bad names, malformed payloads, and excessive submissions (85.812ms)
+✔ generated Worker embeds the arcade and HOOF while serving API errors honestly without a database (41.6063ms)
+✔ older scores remain stored but do not compete with the new trail rules (5.5287ms)
+✔ difficulty adds watchers and shortens safe time as score rises (3.8508ms)
+✔ watchers clearly progress from away to warning to watching (0.5945ms)
+✔ a scratch is only caught while at least one owner is watching (0.3435ms)
+✔ online timer rooms create, join, synchronize, accept one tap, and reveal rankings (255.4658ms)
+✔ room controls reject strangers and mid-round joins (12.1023ms)
+✔ slice edges lie on exact circles around the rotation pivot at every supported size (2.2129ms)
+✔ rotation settles onto its detent without overshooting (11.6174ms)
+✔ rapid reversal preserves position and velocity rather than teleporting a panel (0.7808ms)
+✔ wraparound uses unbounded rotation with fixed angular separation on the wheel (2.2637ms)
+✔ direct selection takes the nearest equivalent game in either direction (0.3597ms)
+✔ spring remains finite after frame delays and respects the elapsed-time cap (1.6446ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1491.0887

@@ -1,0 +1,248 @@
+
+=== PAGE 1 ===
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+          Preparing    for  your   Software    Engineer     Interview               
+                                                                                    
+          at Benchling                                                              
+                                                                                    
+                                                                                    
+          We are excited to (virtually) meet you! We hope it’ll be a great experience where you can meet future
+          teammates, learn more about the company, and show us why you would be a great addition to our
+          team.                                                                     
+                                                                                    
+                                                                                    
+          This guide will give you insight into what to expect and how to prepare. We know interviewing can be
+          nerve-wracking, so we aim to be transparent about the process - it’s a quick overview of what to
+          expect at Benchling.                                                      
+                                                                                    
+                                                                                    
+                                                                                    
+          Interview Process                                                         
+                                                                                    
+          Stage 1: Remote Technical Interview                                       
+                                                                                    
+                                                                                    
+          The interview process starts with an hour long technical Zoom with an engineer. In this interview, we'll
+          work on a coding problem— in a shared coding environment (Coderpad) that exercises some of the
+          skills we value for this role. You should expect to brainstorm and code up a working solution. You
+          should expect to write readable, maintainable code and use data structures that you would use
+          everyday.                                                                 
+                                                                                    
+                                                                                    
+          Stage 2: Remote “Onsite” Interviews                                       
+                                                                                    
+          The “onsite” will usually take 5 hours over Zoom.                         
+                                                                                    
+          We typically split the onsite over two days to help you stay sharp and avoid Zoom fatigue. It also
+          allows us to get an early read on the process. If concerns arise that make an offer unlikely, we can
+          end the interviews early, saving time for both sides. However, we can adjust to your
+          preference—whether you'd like to do it all in one day or spread it over more than two. Just let your
+                                                                                    
+          recruiter know!                                                           
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+
+=== PAGE 2 ===
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+          During the onsite, we assess candidates on problem-solving, architecture, programming productivity,
+          and communication and collaboration. Here's a sample onsite schedule:     
+                                                                                    
+            ●  Product Demo - 20 minutes                                            
+               We start the onsite with a product demo, to give you a sense of what we’re building. This is
+                                                                                    
+               not an assessment or anything you need to prepare for!               
+                                                                                    
+            ●  Programming Productivity and Problem Solving Interview (coding) - 60 minutes
+               This session will be a collaborative coding exercise that includes debugging, problem
+               solving, and coding an extension.                                    
+                                                                                    
+            ●  Data Modeling & Problem Solving Interview (whiteboarding) - 60 minutes
+                                                                                    
+               You’ll spend this session designing a system and data model to support a set of
+               requirements. You’ll work collaboratively with an engineer.          
+                                                                                    
+            ●  Code Architecture & Programming Productivity Interview (coding) - 90 minutes
+                                                                                    
+               This session focuses on code design and building an extensible architecture. Rather than
+               simply solving a single problem, you’ll define the building blocks of a solution that can work
+               for both specific and broader use cases. At Benchling, our customers all run their science
+               differently, so abstraction and flexibility are critical. We’re looking for clean, extensible design
+               as much as working code. You’re welcome to use your own coding environment if that helps
+               you work more comfortably.                                           
+                                                                                    
+            ●  Hiring Manager Behavioral Interview - 45 minutes                     
+                                                                                    
+               You’ll meet with a member of our Engineering leadership team. They may ask for stories
+               from your previous experiences that have shaped you as an engineer.  
+                                                                                    
+            ●  Recruiter Debrief - 15 minutes                                       
+                                                                                    
+               You’ll sync back up with your recruiter at the end of the onsite to debrief the interview.
+               There’s no need to prepare for this session, though feel free to share any feedback you have
+               about the process!                                                   
+                                                                                    
+                                                                                    
+                                                                                    
+          Before the onsite, we'll ask you to have references ready — please try to get them to us as soon as
+          possible. We won't reach out to them until later in the process, but having them earlier reduces
+          back-and-forth time and lets us run a faster interview process.           
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+
+=== PAGE 3 ===
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+          How  to Prepare                                                           
+                                                                                    
+                                                                                    
+          Interviewing can be quite different from your day-to-day job, so being prepared will help you
+          do well. Take some time to brush up on their interview skills, coding skills and algorithms.
+                                                                                    
+          Practice coding under time pressure. The nature of interviews means you’ll have a limited time for
+          coding. Consider practicing coding questions online or doing a mock interview with a friend.
+                                                                                    
+                                                                                    
+          Reflect on your previous experiences. We may ask you to talk through previous projects or stories
+          that have impacted you.                                                   
+                                                                                    
+                                                                                    
+          Prepare a few questions to ask your interviewers. You’ll have a few minutes in each
+          interview to ask questions, so come with a few prepared!                  
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+          Technical Interview Tips                                                  
+                                                                                    
+          The interviews will cover topics from coding to algorithms to high-level architectural design. Here
+                                                                                    
+          are some tips to help prepare:                                            
+                                                                                    
+          Above all, we want you to do well. We're rooting for you, don't forget that.
+                                                                                    
+          Use a comfortable coding environment. For the coding interviews, you can choose between
+          CoderPad (a shared coding environment) or your coding environment (we'd ask you to share your
+          screen). We have starter code for the coding questions you'll need to copy over if you're using your
+                                                                                    
+          own environment.                                                          
+                                                                                    
+          Let us know what you're thinking. We care much more about how you solve a problem than about
+          whether you solve it or not. We realize that interviewing is noisy, and hearing your thought process
+          gives better information than just looking at results. We also know most folks don't usually code and
+          talk simultaneously, so don't worry about talking while coding, but be prepared to pause and share
+                                                                                    
+          occasionally. Be ready to discuss why you made certain decisions, and evaluate the alternatives. We
+          don't usually have a single approach in mind for any problem, but you should be able to defend
+          whatever path you take.                                                   
+                                                                                    
+          Feel free to use the internet. We won't ask anything we'd ordinarily need to look up, and if you need
+          to look something up during the interview, that's fine. Be comfortable with debugging in your
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+
+=== PAGE 4 ===
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+          environment of choice. We don't expect you to write bug-free code, but we expect you to be able to
+          fix any that comes up.                                                    
+                                                                                    
+                                                                                    
+          Can I use a LLM during the interview?                                     
+                                                                                    
+                                                                                    
+          We ask that you not use an LLM during the interview. While we recognize that LLMs are a great tool
+          and very useful for day-to-day programming, the goal of the interview is to understand how you
+                                                                                    
+          think and work, not how an LLM thinks and works. We aren't just looking to see if you can solve the
+          problems we are giving – we are looking to evaluate your critical thinking and how you approach
+          problems. Using an LLM detracts from us being able to understand your problem solving process.
+          Instead, it just gives us signal on how you are at prompt engineering which is not what we are looking
+          for in these roles.                                                       
+                                                                                    
+                                                                                    
+                                                                                    
+          But you let us use Google and the internet!                               
+                                                                                    
+          Using Google or the internet typically helps with the implementation of a solution, i.e. "how do I
+                                                                                    
+          enumerate a list in Python?" or "what is the order of arguments to Javascript's reduce function?" The
+          benefit of LLMs over Google is that they work at a much higher level in understanding a more
+          abstract problem and then give solutions to that problem. However, even LLMs are limited as the
+          problems they can solve are smaller in both scope and constraints than most of the problems than
+          you would face during a normal workday. Unfortunately, given the time pressures of an interview
+          session, we are asking more limited problems that we can not only find a solution for, but also solve
+                                                                                    
+          within the time frame. These are problems that an LLM might be able to adequately solve, but these
+          aren’t the problems that you’ll be defining and solving at Benchling.     
+                                                                                    
+          In addition, we are looking to make sure that you understand the problem and your solution, which an
+          LLM may not help with. In fact, it may put you at a disadvantage as you may not fully understand the
+          code that it recommends.                                                  
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    

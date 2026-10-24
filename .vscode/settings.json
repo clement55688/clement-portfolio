@@ -1,0 +1,29 @@
+{
+  "editor.formatOnSave": false,
+  "files.autoSave": "off",
+  "npm.packageManager": "pnpm",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.workingDirectories": [{ "directory": ".", "changeProcessCWD": true }],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/.git": true,
+    "clement-arcade/dist/server": true,
+    "clement-arcade/dist/.openai": true,
+    "**/.wrangler": true,
+    "**/.local": true,
+    "tmp": true,
+    "work": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/.git/objects/**": true,
+    "clement-arcade/dist/server/**": true,
+    "clement-arcade/dist/.openai/**": true,
+    "**/.wrangler/**": true,
+    "**/.local/**": true,
+    "tmp/**": true,
+    "work/**": true
+  }
+}
