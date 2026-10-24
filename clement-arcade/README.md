@@ -1,6 +1,6 @@
-# HOOF!
+# Clement Arcade
 
-A phone-friendly four-button horse game with an arcade UI, optional sound, challenge links, and a shared top-10 leaderboard. No player accounts required.
+A collection of mini-games in Clement's Gaming Room, including HOOF!, Catvolution, Swim Off, Remembrance Flight, TEN.00, and Itchy Business. No player accounts required.
 
 ## Develop on Windows or macOS
 

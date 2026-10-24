@@ -22,4 +22,4 @@ await mkdir(new URL('dist/server/', root), { recursive: true });
 await mkdir(new URL('dist/.openai/', root), { recursive: true });
 await writeFile(new URL('dist/server/index.js', root), worker);
 await writeFile(new URL('dist/.openai/hosting.json', root), await readFile(new URL('.openai/hosting.json', root)));
-console.log('Built HOOF worker and embedded game assets.');
+console.log('Built arcade worker and embedded game assets.');

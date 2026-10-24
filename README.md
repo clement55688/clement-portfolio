@@ -4,6 +4,12 @@ An experimental, scroll-driven portfolio built with Next.js 16, TypeScript, Tail
 
 ## Development
 
+The separate mini-game arcade lives in `clement-arcade/`. For Windows + VS Code setup,
+Cline free-provider configuration, commands and deployment details, see
+[Local development](docs/LOCAL_DEVELOPMENT.md) and [AI development](docs/AI_DEVELOPMENT.md).
+Run `pnpm run setup:local` to install both apps, then `pnpm run dev:games` to play
+the arcade at http://localhost:4173.
+
 ```bash
 pnpm install
 pnpm dev

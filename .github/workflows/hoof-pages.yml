@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'horse-game/**'
+      - 'clement-arcade/**'
       - '.github/workflows/hoof-pages.yml'
 permissions:
   contents: read
@@ -17,7 +17,8 @@ jobs:
           node-version: '24'
       - name: Build Worker
         run: npm run build
-        working-directory: horse-game
+        working-directory: clement-arcade
       - name: Test game and leaderboard
         run: npm test
-        working-directory: horse-game
+        working-directory: clement-arcade
+

@@ -8,11 +8,11 @@ Use these project settings:
 | --- | --- |
 | GitHub repository | `clement55688/clement-portfolio` |
 | Production branch | `codex/hoof-game` |
-| Root directory | `horse-game` |
+| Root directory | `clement-arcade` |
 | Worker name | `hoof-game` |
 | Build command | `npm run check` |
 | Deploy command | `npm run deploy:cloudflare` |
-| Build watch path | `horse-game/**` |
+| Build watch path | `clement-arcade/**` |
 | Node version | `24` (also declared in `.node-version`) |
 | Package manager | `pnpm@11.19.0` |
 
