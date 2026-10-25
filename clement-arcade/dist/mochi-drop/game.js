@@ -151,7 +151,8 @@ function updateCollection(justFound = -1) {
   });
   $('#found-count').textContent = `${profile.found.size} / 11`;
   const next = STAGES.findIndex((_, i) => !profile.found.has(i));
-  $('#goal').textContent = next < 0 ? '兩隻宇宙貓合成，可騰出空間。' : STAGES[next].name;
+  $('#goal-label').textContent = next < 0 ? '圖鑑已集滿' : '圖鑑目標';
+  $('#goal').textContent = next < 0 ? '兩隻宇宙貓合成，可騰出空間。' : `合成「${STAGES[next].name}」`;
 }
 function openPanel(kind, html, options = {}) {
   const wasPlaying = world.state.status === 'playing';
