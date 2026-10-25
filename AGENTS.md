@@ -20,7 +20,10 @@ architecture, assets, game logic, routes and Git history unless the task require
   **`clement-arcade/dist/` is tracked source, not disposable build output.** Only
   `dist/server/` and `dist/.openai/` are generated. Landing page: `dist/index.html`.
 - Game routes under `clement-arcade/dist/`: `hoof/`, `catvolution/`, `frog/`,
-  `cabin-chaos/` (Remembrance Flight), `ten-seconds/`, `sneaky-scratch/`.
+  `cabin-chaos/` (Remembrance Flight), `ten-seconds/`, `sneaky-scratch/`,
+  `mochi-drop/` (Suika-style cat merging; separate from Catvolution/2048).
+  Mochi Drop uses vendored Matter.js, `physics.mjs`, and its own local save keys;
+  see that game's README and `tests/mochi-drop.test.mjs` before editing.
 - Server: `clement-arcade/server.mjs`; local SQLite: `local-db.mjs`; worker/API:
   `worker/index.js`; D1 migrations: `drizzle/`; tests: `tests/*.test.mjs`.
 - Use Node 24 LTS and pnpm 11.19.0. The two packages have separate lockfiles;
