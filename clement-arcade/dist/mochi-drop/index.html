@@ -11,7 +11,6 @@
 <body>
   <header class="site-header">
     <a class="room-link" href="/" aria-label="回到 Clement’s Gaming Room"><span class="back-arrow">↖</span><span>CLEMENT’S<small>GAMING ROOM</small></span></a>
-    <span class="header-note"><i></i> A SMALL GAME. A BIG SOFT SPOT.</span>
     <div class="header-actions"><button id="sound" class="icon-button" aria-label="開啟音效" aria-pressed="false">♪<span class="sound-slash">╱</span></button><button id="help" class="icon-button" aria-label="玩法說明">?</button></div>
   </header>
   <main class="game-layout">
@@ -19,44 +18,42 @@
       <p class="eyebrow"><span></span> THE COZY CAT CLUB · 001</p>
       <h1 id="game-title">MOCHI<br><em>DROP<span>✦</span></em></h1>
       <p class="chinese-title">合成大胖貓</p>
-      <p class="intro-copy">一點點小貓，<br>億點點可愛。</p>
+      <p class="intro-copy">兩隻相同，<br>合成更大隻。</p>
       <div class="intro-art" aria-hidden="true"><span class="art-orbit"></span><span class="spark s1">✦</span><span class="spark s2">✧</span><img src="cats/7.webp" alt="" width="260" height="260"><span class="cat-sticker">100% 幸福肥</span></div>
-      <p class="intro-bottom">NO RUSH. JUST ONE MORE CAT.<br><span>讓一顆小奶球，變成你的宇宙。</span></p>
+      <p class="intro-bottom"><span>目標：合成宇宙大胖貓。</span></p>
     </section>
 
     <section class="game-column" aria-label="合成大胖貓遊戲">
       <div class="mode-tabs" role="group" aria-label="遊戲模式"><button id="free-mode" aria-pressed="true">輕鬆玩</button><button id="daily-mode" aria-pressed="false">每日挑戰 <span>✦</span></button></div>
       <div class="scoreboard">
-        <div class="score-box"><span>本局分數</span><strong id="score">0</strong></div>
-        <div class="best-box"><span id="best-label">最佳紀錄</span><strong id="best">0</strong><small>PERSONAL BEST</small></div>
+        <div class="score-box"><span>分數</span><strong id="score">0</strong></div>
+        <div class="best-box"><span id="best-label">最高分</span><strong id="best">0</strong></div>
         <div class="next-box"><span>下一隻</span><img id="next-cat" src="cats/0.webp" alt="下一隻貓咪" width="52" height="52"></div>
       </div>
       <div class="board-shell" id="board-shell">
-        <canvas id="game" width="430" height="650" tabindex="0" aria-label="貓咪遊戲區：左右方向鍵瞄準，空白鍵放下一隻貓。相同貓咪相碰即可合成。"></canvas>
+        <canvas id="game" width="430" height="650" tabindex="0" aria-label="貓咪遊戲區：左右方向鍵移動，空白鍵掉貓。兩隻相同的貓碰到就合成。"></canvas>
         <div class="board-cover" id="start-cover">
-          <div class="welcome-cats" aria-hidden="true"><img src="cats/1.webp" alt=""><img src="cats/6.webp" alt=""><img src="cats/2.webp" alt=""></div>
-          <span class="tiny-label">LITTLE DROPS, BIG CHONKS.</span>
-          <h2>小貓掉下來，<br>快樂長出來。</h2>
-          <p>相同的貓咪碰在一起，就會長大。<br>你能養出宇宙大胖貓嗎？</p>
+          <div class="merge-example" role="img" aria-label="合成示意：兩隻相同的糯米糰，合成一隻更大的小橘寶。"><img src="cats/1.webp" alt=""><span aria-hidden="true">＋</span><img src="cats/1.webp" alt=""><span aria-hidden="true">→</span><img src="cats/2.webp" alt=""></div>
+          <h2>兩隻一樣，<br>就能合成。</h2>
+          <p>拖曳選位置，放手掉貓。</p>
           <button class="primary-button" id="start" disabled>貓咪準備中…</button>
-          <small>拖曳瞄準 · 放手掉貓 · 慢慢來也沒關係</small>
         </div>
         <div class="merge-banner" id="merge-banner" aria-live="polite"></div>
         <div class="danger-banner" id="danger-banner" hidden>貓咪快滿出來了！<span id="danger-count"></span></div>
-        <div class="board-foot" aria-hidden="true"><span>✦</span> PLEASE HANDLE WITH LOVE <span>✦</span></div>
+        <div class="board-foot" aria-hidden="true"><span>✦</span> MOCHI DROP <span>✦</span></div>
       </div>
       <div class="play-controls"><button id="pause" class="secondary-button" aria-label="暫停遊戲" disabled>Ⅱ</button><button id="drop" class="drop-button" disabled>↓ 掉一隻貓</button><button id="share" class="secondary-button" aria-label="分享遊戲與成績">↗</button></div>
-      <p class="input-hint" id="input-hint">拖曳瞄準，放手掉貓 <span>／ ← → ＋ 空白鍵</span></p>
+      <p class="input-hint" id="input-hint">放手掉貓 · 兩隻相同就合成 <span>／ ← → ＋ 空白鍵</span></p>
       <p class="daily-note" id="daily-note" hidden></p>
     </section>
 
     <aside class="collection" aria-label="貓咪成長圖鑑">
-      <div class="collection-heading"><span class="eyebrow">THE GROW-UP</span><span id="found-count">1 / 11</span></div>
-      <h2>每一隻，<br>都值得期待。</h2><p>兩隻一樣的，變成更大一隻。</p>
+      <div class="collection-heading"><span class="eyebrow">貓咪圖鑑</span><span id="found-count">1 / 11</span></div>
+      <h2>越合越大。</h2><p>兩隻相同的貓 → 下一階</p>
       <div id="collection-grid" class="collection-grid"></div>
-      <div class="goal-note"><span>✧</span><div><strong>下一個小目標</strong><p id="goal">合成你的第一隻糯米糰。</p></div></div>
-      <div class="how-to"><span class="tiny-label">A LITTLE TIP</span><p>大貓留在一起，小貓放旁邊。<br>下一隻，也很重要。</p></div>
-      <p class="collection-foot">你的貓咪圖鑑和紀錄<br>會留在這台裝置，不用登入 ♡</p>
+      <div class="goal-note"><span>✧</span><div><strong>下一隻</strong><p id="goal">糯米糰</p></div></div>
+      <div class="how-to"><span class="tiny-label">小技巧</span><p>把相同的貓放在一起。</p></div>
+      <p class="collection-foot">自動存檔，不用登入。</p>
     </aside>
   </main>
   <footer class="page-footer"><span>A LITTLE CORNER OF CLEMENT’S GAMING ROOM</span><a href="/catvolution/">也試試看 Catvolution ↗</a></footer>

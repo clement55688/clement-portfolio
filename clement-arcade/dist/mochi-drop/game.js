@@ -118,9 +118,9 @@ function newRun(newMode = mode) {
 function updateMode() {
   $('#free-mode').setAttribute('aria-pressed', String(mode === 'free'));
   $('#daily-mode').setAttribute('aria-pressed', String(mode === 'daily'));
-  $('#best-label').textContent = mode === 'daily' ? '本日紀錄' : '最佳紀錄';
+  $('#best-label').textContent = mode === 'daily' ? '今日最高' : '最高分';
   $('#daily-note').hidden = mode !== 'daily';
-  $('#daily-note').textContent = `${day} · 每個人都是同一組貓咪順序，比比看誰能養更大。`;
+  $('#daily-note').textContent = `${day} · 同一天，相同出場順序。`;
 }
 function switchMode(next) {
   if (next === mode) return;
@@ -131,7 +131,7 @@ function switchMode(next) {
     return;
   }
   pendingMode = next;
-  openPanel('switch', `<span class="dialog-eyebrow">A FRESH LITTLE START</span><h2 id="panel-title" class="dialog-title">換個方式養貓？</h2><p class="dialog-copy">切換模式會結束現在這一局。<br>成長圖鑑和最佳紀錄都會保留。</p><div class="dialog-actions"><button class="primary-button" data-action="switch">開始${next === 'daily' ? '每日挑戰' : '輕鬆玩'}</button><button class="plain-button" data-action="resume">繼續這一局</button></div>`);
+  openPanel('switch', `<span class="dialog-eyebrow">A FRESH LITTLE START</span><h2 id="panel-title" class="dialog-title">切換模式？</h2><p class="dialog-copy">這局會重新開始，紀錄和圖鑑會保留。</p><div class="dialog-actions"><button class="primary-button" data-action="switch">開始${next === 'daily' ? '每日挑戰' : '輕鬆玩'}</button><button class="plain-button" data-action="resume">繼續玩</button></div>`);
 }
 $('#free-mode').onclick = () => switchMode('free'); $('#daily-mode').onclick = () => switchMode('daily');
 $('#start').onclick = () => newRun();
@@ -151,7 +151,7 @@ function updateCollection(justFound = -1) {
   });
   $('#found-count').textContent = `${profile.found.size} / 11`;
   const next = STAGES.findIndex((_, i) => !profile.found.has(i));
-  $('#goal').textContent = next < 0 ? '讓兩隻宇宙大胖貓相遇，看看會發生什麼。' : `養出${STAGES[next].name}，讓圖鑑多一個朋友。`;
+  $('#goal').textContent = next < 0 ? '兩隻宇宙貓合成，可騰出空間。' : STAGES[next].name;
 }
 function openPanel(kind, html, options = {}) {
   const wasPlaying = world.state.status === 'playing';
@@ -170,20 +170,24 @@ function closePanel(resume = true) {
 $('#close-panel').onclick = () => closePanel();
 panel.addEventListener('cancel', e => { e.preventDefault(); if (!$('#close-panel').hidden) closePanel(); });
 function showPause(restored = false) {
-  openPanel('pause', `<img class="dialog-art" src="cats/0.webp" alt="熟睡的小奶球"><span class="dialog-eyebrow">TAKE YOUR TIME</span><h2 id="panel-title" class="dialog-title">${restored ? '貓咪還在等你。' : '讓貓咪睡一下。'}</h2><p class="dialog-copy">${restored ? '上次的進度已經幫你留好了。' : '暫停一下，幸福不會跑掉。'}</p><div class="dialog-actions"><button class="primary-button" data-action="resume">繼續養貓 →</button><button class="plain-button" data-action="restart-confirm">重新開始</button></div>`, { resume: true });
+  openPanel('pause', `<img class="dialog-art" src="cats/0.webp" alt="熟睡的小奶球"><span class="dialog-eyebrow">TAKE YOUR TIME</span><h2 id="panel-title" class="dialog-title">${restored ? '繼續上次的遊戲？' : '已暫停'}</h2><p class="dialog-copy">${restored ? '進度已儲存。' : '準備好再繼續。'}</p><div class="dialog-actions"><button class="primary-button" data-action="resume">繼續玩 →</button><button class="plain-button" data-action="restart-confirm">重新開始</button></div>`, { resume: true });
 }
 $('#pause').onclick = () => showPause();
 function showHelp() {
-  openPanel('help', '<span class="dialog-eyebrow">HOW TO GROW A CHONK</span><h2 id="panel-title" class="dialog-title">三件事，就會玩了。</h2><ol class="help-steps"><li><b>1</b><div><strong>移動手指，選個位置。</strong>電腦也能用滑鼠，或 ← → 方向鍵。</div></li><li><b>2</b><div><strong>放開，小貓就掉下來。</strong>也可以按下方按鈕或空白鍵。</div></li><li><b>3</b><div><strong>一樣的貓，碰到就長大。</strong>別讓貓咪堆過虛線太久。合成有時會救你一命！</div></li></ol><p class="dialog-copy">共 11 階。兩隻宇宙貓相遇會化成星光、騰出空間，讓你繼續玩。<br>每日挑戰用相同出場順序；紀錄和圖鑑存在這台裝置。</p><button class="primary-button" data-action="resume">知道了，去養貓 ♡</button>');
+  openPanel('help', `<h2 id="panel-title" class="dialog-title">兩隻一樣，就合成。</h2>
+    ${$('#start-cover .merge-example').outerHTML}
+    <p class="dialog-copy">拖曳選位置，放手掉貓。<br><strong>兩隻相同的貓碰到，就會變大。</strong><br>堆過虛線太久，就會結束。</p>
+    <p class="keyboard-note">電腦：← → 移動 · 空白鍵掉貓</p>
+    <button class="primary-button" data-action="resume">知道了</button>`);
 }
 $('#help').onclick = showHelp;
 function showCat(i) {
   const unlocked = profile.found.has(i), stage = STAGES[i];
-  openPanel('cat', `<img class="dialog-art" style="${unlocked ? '' : 'filter:brightness(0);opacity:.12'}" src="cats/${i}.webp" alt="${unlocked ? stage.name : '尚未發現的貓咪'}"><span class="dialog-eyebrow">GROWTH DIARY · ${String(i + 1).padStart(2, '0')} / 11</span><h2 id="panel-title" class="dialog-title">${unlocked ? stage.name : '有隻貓，正在等你。'}</h2><p class="dialog-copy">${unlocked ? stage.note : `再努力一點點，合成第 ${i + 1} 階的貓咪，<br>就能把牠加入你的成長日記。`}</p><span class="dialog-tag">${unlocked ? '♡ 已加入你的貓咪圖鑑' : '✧ 尚未發現'}</span>`);
+  openPanel('cat', `<img class="dialog-art" style="${unlocked ? '' : 'filter:brightness(0);opacity:.12'}" src="cats/${i}.webp" alt="${unlocked ? stage.name : '尚未發現的貓咪'}"><span class="dialog-eyebrow">GROWTH DIARY · ${String(i + 1).padStart(2, '0')} / 11</span><h2 id="panel-title" class="dialog-title">${unlocked ? stage.name : '尚未發現'}</h2><p class="dialog-copy">${unlocked ? stage.note : `合成第 ${i + 1} 階即可解鎖。`}</p><span class="dialog-tag">${unlocked ? '♡ 已加入你的貓咪圖鑑' : '✧ 尚未發現'}</span>`);
 }
 function showOver() {
   const score = world.state.score, peak = world.state.maxStage;
-  openPanel('over', `<img class="dialog-art" src="cats/${peak}.webp" alt="${STAGES[peak].name}"><span class="dialog-eyebrow">${score > previousBest ? '✦ A NEW PERSONAL BEST ✦' : 'THANKS FOR ALL THE CHONKS'}</span><h2 id="panel-title" class="dialog-title">${score > previousBest ? '你又養出新紀錄了！' : '這個窩，幸福滿出來了。'}</h2><p class="dialog-score">${score.toLocaleString()}</p><span class="dialog-score-label">本局分數 · ${world.state.drops} 隻小貓掉下來</span><p class="dialog-copy">這次養出了「${STAGES[peak].name}」。<br>${peak < 10 ? `再一局，目標是${STAGES[Math.min(10, peak + 1)].name}！` : '宇宙裡最圓的奇蹟，就是你養的。'}</p><div class="dialog-actions"><button class="primary-button" data-action="new">再養一窩 ↓</button><button class="plain-button" data-action="share">分享我的胖貓 ↗</button></div>`, { resume: false, closable: false });
+  openPanel('over', `<img class="dialog-art" src="cats/${peak}.webp" alt="${STAGES[peak].name}"><span class="dialog-eyebrow">${score > previousBest ? '✦ A NEW PERSONAL BEST ✦' : 'THANKS FOR ALL THE CHONKS'}</span><h2 id="panel-title" class="dialog-title">${score > previousBest ? '新紀錄！' : '貓咪滿了！'}</h2><p class="dialog-score">${score.toLocaleString()}</p><span class="dialog-score-label">本局分數 · ${world.state.drops} 隻小貓掉下來</span><p class="dialog-copy">這次養出了「${STAGES[peak].name}」。<br>${peak < 10 ? `再一局，目標是${STAGES[Math.min(10, peak + 1)].name}！` : '宇宙裡最圓的奇蹟，就是你養的。'}</p><div class="dialog-actions"><button class="primary-button" data-action="new">再玩一次 ↓</button><button class="plain-button" data-action="share">分享我的胖貓 ↗</button></div>`, { resume: false, closable: false });
 }
 panel.addEventListener('click', e => {
   const action = e.target.closest('[data-action]')?.dataset.action;
@@ -192,7 +196,7 @@ panel.addEventListener('click', e => {
   if (action === 'new') newRun();
   if (action === 'switch') newRun(pendingMode || mode);
   if (action === 'share') void share();
-  if (action === 'restart-confirm') openPanel('restart', '<span class="dialog-eyebrow">ONE MORE LITTLE GO?</span><h2 id="panel-title" class="dialog-title">重新養一窩？</h2><p class="dialog-copy">現在這一局會結束，<br>最佳紀錄和圖鑑會保留。</p><div class="dialog-actions"><button class="primary-button" data-action="new">好，重新開始</button><button class="plain-button" data-action="resume">先繼續這一局</button></div>', { resume: true });
+  if (action === 'restart-confirm') openPanel('restart', '<span class="dialog-eyebrow">ONE MORE LITTLE GO?</span><h2 id="panel-title" class="dialog-title">重新開始？</h2><p class="dialog-copy">現在這一局會結束，<br>最佳紀錄和圖鑑會保留。</p><div class="dialog-actions"><button class="primary-button" data-action="new">好，重新開始</button><button class="plain-button" data-action="resume">先繼續玩</button></div>', { resume: true });
 });
 async function share() {
   const url = new URL('./', location.href); url.search = mode === 'daily' ? `daily=${day}` : '';
@@ -258,7 +262,7 @@ for (let y = 15; y < A.floor; y += 26) for (let x = 13 + (y % 52 ? 13 : 0); x < 
 const wash = bg.createLinearGradient(0, 500, 0, 630); wash.addColorStop(0, '#f6e5c700'); wash.addColorStop(1, '#f6e5c755'); bg.fillStyle = wash; bg.fillRect(0, 450, A.width, 200);
 bg.strokeStyle = '#dfc6a8'; bg.lineWidth = 2; bg.beginPath(); bg.moveTo(14, 14); bg.lineTo(14, 600); bg.quadraticCurveTo(14, 628, 40, 628); bg.lineTo(390, 628); bg.quadraticCurveTo(416, 628, 416, 600); bg.lineTo(416, 14); bg.stroke();
 bg.fillStyle = '#ead5b4'; bg.fillRect(22, A.floor, 386, 8); bg.fillStyle = '#e2c49c'; bg.fillRect(30, 628, 370, 1);
-bg.fillStyle = '#baa187'; bg.font = 'bold 8px sans-serif'; bg.textAlign = 'center'; bg.fillText('A LITTLE HOME FOR YOUR VERY BIG CATS', A.width / 2, 24);
+bg.fillStyle = '#baa187'; bg.font = 'bold 8px sans-serif'; bg.textAlign = 'center'; bg.fillText('合成大胖貓', A.width / 2, 24);
 
 function drawCat(stage, x, y, radius, angle = 0, scaleX = 1, scaleY = 1, alpha = 1) {
   ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scaleX, scaleY);
@@ -281,9 +285,11 @@ function render(timestamp, dt) {
   ctx.clearRect(0, 0, A.width, A.height); ctx.drawImage(field, 0, 0);
   const s = world.state, danger = s.danger / 2400;
   if (danger > 0) { ctx.fillStyle = `rgba(216,92,65,${danger * .12})`; ctx.fillRect(A.left, 32, A.right - A.left, A.line - 32); }
-  ctx.save(); ctx.strokeStyle = danger > 0 ? '#d6755a' : '#c7b397'; ctx.lineWidth = 1; ctx.setLineDash([5, 6]);
-  ctx.beginPath(); ctx.moveTo(A.left + 5, A.line); ctx.lineTo(A.right - 5, A.line); ctx.stroke(); ctx.restore();
-  ctx.fillStyle = danger > 0 ? '#bc684d' : '#bca78f'; ctx.font = '9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('別讓小貓住太高 ♡', A.left + 7, A.line + 16);
+  if (s.status !== 'ready') {
+    ctx.save(); ctx.strokeStyle = danger > 0 ? '#d6755a' : '#c7b397'; ctx.lineWidth = 1; ctx.setLineDash([5, 6]);
+    ctx.beginPath(); ctx.moveTo(A.left + 5, A.line); ctx.lineTo(A.right - 5, A.line); ctx.stroke(); ctx.restore();
+    ctx.fillStyle = danger > 0 ? '#bc684d' : '#bca78f'; ctx.font = '9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('別堆過線', A.left + 7, A.line + 16);
+  }
   ctx.save();
   if (shake > 0 && !reduced.matches) { ctx.translate(Math.sin(timestamp * .11) * shake, Math.cos(timestamp * .09) * shake); shake = Math.max(0, shake - dt * 12); }
   for (const body of world.cats) {
