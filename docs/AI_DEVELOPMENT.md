@@ -67,6 +67,34 @@ guidance; actual permission toggles must be checked in the Cline panel once:
 - Never auto-approve deployment, remote migrations, push, dependency changes,
   deletion, account changes, or billing. A rule file is not a sandbox.
 
+## Publish the arcade through GitHub
+
+Cloudflare Workers Builds already deploys `codex/hoof-game` when files under
+`clement-arcade/` are pushed. Cline does not need a Cloudflare API token for this
+route; Cloudflare manages its own deployment credential. A custom
+`CLOUDFLARE_API_TOKEN` with `Workers Scripts: Read` cannot publish a Worker and
+is unnecessary for Git-triggered deployment.
+
+For a deployment request, have Cline inspect the current branch, working tree,
+and exact diff; run `npm run check` from `clement-arcade`; then show the proposed
+commit and push to `origin/codex/hoof-game` for your review. A push to that
+production branch starts the Cloudflare build. Approve the push explicitly in
+Cline after reviewing it, then check the result in Cloudflare Workers Builds.
+Do not run `npm run deploy:cloudflare` locally: it applies remote D1 migrations
+before publishing. Keep Cline's command approval on, and never paste a
+Cloudflare token into a prompt or commit it.
+
+Reusable deployment prompt:
+
+> Deploy my reviewed arcade changes using the existing GitHub-to-Cloudflare
+> Workers Builds pipeline. First inspect `git status`, the current branch, and
+> the full diff. Run `npm run check` from `clement-arcade`. Report the changed
+> files, check result, and exact commit/push plan. Do not edit files, run local
+> Cloudflare deploy/migration commands, or push until I approve the plan. After
+> I approve, push only the intended arcade changes to `origin/codex/hoof-game`
+> and report the Cloudflare build result. Do not request or read a Cloudflare
+> API token.
+
 No Cline API request or file-edit AI test was made during setup: no credentials
 were supplied. After adding a key, run this harmless end-to-end test in Act mode:
 
