@@ -16,6 +16,13 @@ Use these project settings:
 | Node version | `24` (also declared in `.node-version`) |
 | Package manager | `pnpm@11.19.0` |
 
+Deployment connection repaired on 2026-10-24 after the repository's branch and
+folder renames. Cloudflare's production branch is now `arcade/hoof-game`, root
+directory `clement-arcade`, and include path `clement-arcade/**`. The old dashboard
+settings still referenced the deleted `codex/hoof-game` branch and `horse-game/`
+folder, which caused the previous failed build. The existing managed deployment
+token is retained; local development and Git-triggered publishing need no new key.
+
 The database UUID and account ID in `wrangler.jsonc` were read from the signed-in Cloudflare dashboard. These identifiers are not secrets. The deployment token is managed by Cloudflare, not stored in source control. Preview builds are disabled so they cannot modify the production leaderboard.
 
 The deployment command applies the SQL migrations in `drizzle/` before publishing the Worker. It refuses to deploy without a configured database, so the leaderboard cannot silently launch without storage. The Cloudflare build must pass the game and API checks before deployment. Turn off automatic deployments from non-production branches unless separate preview resources are configured.
