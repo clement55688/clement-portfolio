@@ -56,7 +56,7 @@ and command auto-approval off. Instructions do not enforce editor approval toggl
 ## Git and deployment
 
 Origin: `https://github.com/clement55688/clement-portfolio.git`.
-Current arcade production branch: `codex/hoof-game`. Root portfolio deploys via the
+Current arcade production branch: `arcade/hoof-game`. Root portfolio deploys via the
 existing Vercel integration. Arcade deploys via Cloudflare Workers Builds, root
 `clement-arcade`, with `npm run check` then `npm run deploy:cloudflare`.
 `.github/workflows/hoof-pages.yml` runs checks; it does not publish the Worker.

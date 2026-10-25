@@ -7,7 +7,7 @@ Use these project settings:
 | Setting | Value |
 | --- | --- |
 | GitHub repository | `clement55688/clement-portfolio` |
-| Production branch | `codex/hoof-game` |
+| Production branch | `arcade/hoof-game` |
 | Root directory | `clement-arcade` |
 | Worker name | `hoof-game` |
 | Build command | `npm run check` |

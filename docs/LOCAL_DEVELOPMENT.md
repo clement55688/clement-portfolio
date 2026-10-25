@@ -104,7 +104,7 @@ Reopen PowerShell, then:
 ```powershell
 npm.cmd install --global --prefix "$env:APPDATA\npm" pnpm@11.19.0
 $env:Path = "$env:APPDATA\npm;$env:Path"
-git clone --branch codex/hoof-game https://github.com/clement55688/clement-portfolio.git clement-games
+git clone --branch arcade/hoof-game https://github.com/clement55688/clement-portfolio.git clement-games
 Set-Location clement-games
 pnpm.cmd run setup:local
 code.cmd --install-extension saoudrizwan.claude-dev
@@ -120,7 +120,7 @@ longer offers that patch, install the current **24.x** LTS from
 [Node.js downloads](https://nodejs.org/en/download), rather than silently switching
 the project to a different major.
 
-The GitHub branch `codex/hoof-game` contains the current arcade work. Cloning
+The GitHub branch `arcade/hoof-game` contains the current arcade work. Cloning
 `main` may give an older portfolio-only state. Clones include committed history;
 the pre-existing untracked cat artwork on this PC does **not** travel until you
 review and commit it yourself. On macOS, install Git, VS Code, Node 24 and pnpm
@@ -131,7 +131,7 @@ review and commit it yourself. On macOS, install Git, VS Code, Node 24 and pnpm
 The existing remote remains `https://github.com/clement55688/clement-portfolio.git`.
 Before pulling, inspect `git status --short` and review/commit your intended work.
 Do not pull over unsaved edits, reset, or discard the untracked cat assets. When
-the working tree is ready, `git pull --ff-only origin codex/hoof-game` updates this
+the working tree is ready, `git pull --ff-only origin arcade/hoof-game` updates this
 branch without creating a merge or rewriting history. If it fails due to local
 work/divergence, stop and review; do not force-reset.
 
@@ -153,7 +153,7 @@ Verify the actual filename first; the example is not an instruction to stage
 unrelated work. Sign in to GitHub through Git Credential Manager's browser prompt
 when needed. Do not embed a PAT in the remote URL. A feature branch does not
 publish the production Worker; review/merge it into the configured production
-branch when ready. Pushing arcade changes to `codex/hoof-game` triggers the existing
+branch when ready. Pushing arcade changes to `arcade/hoof-game` triggers the existing
 Cloudflare pipeline. Confirm your current branch before pushing.
 
 ## Environment and deployment
@@ -174,7 +174,7 @@ Deployment wiring is preserved:
 
 - Portfolio: existing Vercel Git integration; root Next.js package.
 - Arcade: existing **Cloudflare Workers Builds**, repository branch
-  `codex/hoof-game`, root `clement-arcade`, build `npm run check`, deploy
+  `arcade/hoof-game`, root `clement-arcade`, build `npm run check`, deploy
   `npm run deploy:cloudflare`, watch `clement-arcade/**`. Its deploy script applies
   **remote** D1 migrations and publishes the Worker. Use only as an explicit deploy.
 - Worker: `hoof-game`; live https://hoof-game.a2040404.workers.dev/;
