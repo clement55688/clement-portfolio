@@ -12,6 +12,7 @@ const projects = [
   { index: "02", title: "Night Shift", type: "Product system", copy: "An operations workspace designed for the people keeping cities awake." },
   { index: "03", title: "Small Futures", type: "Creative code", copy: "Generative objects that imagine optimistic tools from possible tomorrows." },
   { index: "04", title: "Arcade", type: "Games", copy: "A standalone arcade of browser games, including Catvolution.", href: "https://hoof-game.a2040404.workers.dev/", external: true },
+  { index: "05", title: "Fit Check", type: "For recruiters", copy: "Paste a job description for an honest read on overlap, gaps, and which work to open.", href: "/fit" },
 ];
 
 export default function Home() {
