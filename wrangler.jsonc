@@ -17,5 +17,8 @@
       "binding": "WORKER_SELF_REFERENCE",
       "service": "clement-portfolio"
     }
-  ]
+  ],
+  "ai": {
+    "binding": "AI"
+  }
 }

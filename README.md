@@ -21,3 +21,5 @@ Cloudflare Workers via `@opennextjs/cloudflare`. The target is a `*.workers.dev`
 4. `pnpm preview` serves the Worker locally. `pnpm deploy` builds and deploys, and passes `--keep-vars` so dashboard variables stay. Do not commit `.env` or `.dev.vars`.
 
 Optional: `NEXT_PUBLIC_BUILD_TIME` (build time) and `GIT_COMMIT_SHA` (runtime) for `/api/status`. `/api/snow` calls Open-Meteo per request; an R2 incremental cache is not configured.
+
+The job-description fit checker (`/fit`) calls Workers AI through the `AI` binding in `wrangler.jsonc`. No API token is stored in the project. On the Cloudflare account, open Workers AI once and accept the model terms if the dashboard asks. The route uses `@cf/meta/llama-3.2-3b-instruct` and the account’s free daily neuron allocation (10,000 neurons/day, reset 00:00 UTC). `next dev` has no binding and returns an offline message. `pnpm preview` can call the model, and those calls count against the same allocation.
