@@ -68,13 +68,13 @@ export function FitChecker() {
           />
         </label>
         <div className="fit-actions">
-          <p>Compared only with his resume and public projects.</p>
+          <p className={length > 0 && (tooShort || tooLong) ? "is-warn" : undefined}>
+            {tooLong ? fitMessages.tooLong : length > 0 && tooShort ? fitMessages.tooShort : "Compared only with his resume and public projects."}
+          </p>
           <button type="submit" disabled={!canSubmit}>
             {pending ? "Comparing…" : "Check fit"}
           </button>
         </div>
-        {length > 0 && tooShort ? <p className="fit-hint">{fitMessages.tooShort}</p> : null}
-        {tooLong ? <p className="fit-hint">{fitMessages.tooLong}</p> : null}
       </form>
       <div className="fit-results" aria-live="polite" aria-busy={pending}>
         {error ? <p className="fit-error">{error}</p> : null}
