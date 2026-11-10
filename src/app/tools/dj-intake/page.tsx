@@ -91,7 +91,7 @@ export default function DjIntakePage() {
                 <li><span>Open <strong>DJ Intake.app</strong>. The library opens in your browser and a record icon appears in the menu bar.</span></li>
                 <li><span>Pick your staging folder in <strong>Preferences</strong>. To identify songs, open <strong>Identify → Set up recognition</strong> once and allow the microphone when macOS asks.</span></li>
               </ol>
-              <p className={styles.note}><strong>Updating:</strong> let current jobs finish, quit the menu-bar icon and choose <strong>Preferences → Quit app</strong>, then run this in Terminal. Your settings and queue are kept. Updates are manual for now.</p>
+              <p className={styles.note}><strong>Updating:</strong> from v0.4.2 on, an <strong>Update to …</strong> button appears in the app when a new version is out — click <strong>Update now</strong> and DJ Intake updates and reopens by itself, keeping your settings and queue. On an older version, quit DJ Intake (menu-bar icon and <strong>Preferences → Quit app</strong>) and run this once in Terminal:</p>
               <pre className={styles.code}>{djIntake.updateCommand}</pre>
             </div>
             <div>
