@@ -8,7 +8,7 @@ const RELEASES = "https://github.com/clement55688/dj-intake-app/releases";
 /** The official DJ Intake build. The website and GitHub both point at this asset. */
 export const djIntake = {
   name: "DJ Intake",
-  version: "0.3.0",
+  version: "0.4.0",
   platform: "macOS",
   artifact: "DJ-Intake-macOS-installer.zip",
   artifactType: "ZIP installer",
@@ -19,7 +19,7 @@ export const djIntake = {
   feedbackUrl: "https://github.com/clement55688/dj-intake-app/issues/new/choose",
   updateCommand: 'bash "$HOME/Library/Application Support/DJ Intake Source/scripts/update.command"',
   requirements: [
-    { label: "Platform", value: "macOS" },
+    { label: "Platform", value: "macOS 12 Monterey or later" },
     { label: "Download", value: "DJ-Intake-macOS-installer.zip — a small installer script" },
     { label: "Needs", value: "Git, Python 3.10 or newer, Apple Command Line Tools" },
     { label: "Audio tools", value: "FFmpeg and ffprobe — setup installs them with Homebrew if you have it" },

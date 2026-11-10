@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const jobs = [
   { n: "01", title: "Add a track", body: <>Paste a YouTube, SoundCloud or Bandcamp link, a Spotify track for lookup, or just type <code>Artist — Song</code>. Trim to timestamps when you only need a section. Follow every step from Queued to Checking.</> },
-  { n: "02", title: "Identify a song", body: <>Hear something good? Click <strong>Identify song</strong>. Apple&apos;s Recognize Music saves the name to Saved finds. Compare versions later and pick the one to download — nothing downloads until you choose.</> },
+  { n: "02", title: "Identify a song", body: <>What&apos;s that track? Play it on your Mac or nearby and click <strong>Identify song</strong>. Shazam — built into macOS through Apple Shortcuts — names it, and DJ Intake saves it to Saved finds. Pick the version to download later; nothing downloads until you choose.</> },
   { n: "03", title: "Find the file", body: <>Finished files are checked, tagged and named <code>Artist_Song (Version)</code> in your staging folder. <strong>Show in Finder</strong> takes you straight there. Failures keep their reason and a Retry button.</> },
 ];
 
@@ -34,7 +34,7 @@ export default function DjIntakePage() {
             </div>
           </div>
           <aside className={styles.heroSide}>
-            <p>A local download queue for DJs. Add a track, identify a song, and find every finished file — ready for Serato or rekordbox.</p>
+            <p>A local download queue for DJs. Add a track, let Shazam identify the song that&apos;s playing, and find every finished file — ready for Serato or rekordbox.</p>
             <div className={styles.actions}>
               <a className={styles.primary} href={djIntake.downloadUrl}>Download for macOS ↓</a>
               <a className={styles.ghost} href={djIntake.sourceUrl} target="_blank" rel="noreferrer">View on GitHub ↗</a>
