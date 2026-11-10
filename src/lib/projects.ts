@@ -8,7 +8,7 @@ const RELEASES = "https://github.com/clement55688/dj-intake-app/releases";
 /** The official DJ Intake build. The website and GitHub both point at this asset. */
 export const djIntake = {
   name: "DJ Intake",
-  version: "0.4.0",
+  version: "0.4.1",
   platform: "macOS",
   artifact: "DJ-Intake-macOS-installer.zip",
   artifactType: "ZIP installer",
