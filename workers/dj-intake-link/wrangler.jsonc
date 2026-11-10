@@ -1,0 +1,12 @@
+// Separate Worker for the short link https://dj-intake.a2040404.workers.dev
+// Deploy from this folder: npx wrangler deploy
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "dj-intake",
+  "account_id": "dc373e8d482c778c62c93a48f3df8bd8",
+  "main": "index.js",
+  "compatibility_date": "2026-10-27",
+  "workers_dev": true,
+  "preview_urls": false,
+  "services": [{ "binding": "SITE", "service": "clement-portfolio" }]
+}
