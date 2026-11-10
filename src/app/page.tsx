@@ -1,36 +1,8 @@
 import Link from "next/link";
-import { ArrowDownRight, ArrowUpRight, FileText, Sparkles } from "lucide-react";
-import styles from "./page.module.css";
-
-const projects = [
-  {
-    title: "Clement's Gaming Room",
-    eyebrow: "Featured build · Live",
-    description: "A collection of browser games with persistent scores, playful interaction, and a production Cloudflare deployment.",
-    tags: ["JavaScript", "Cloudflare Workers", "SQLite"],
-    href: "https://hoof-game.a2040404.workers.dev/",
-    source: "https://github.com/clement55688/clement-arcade",
-    external: true,
-  },
-  {
-    title: "JD Fit Checker",
-    eyebrow: "In progress",
-    description: "An AI-assisted tool for matching experience to job descriptions and turning a job search into a focused workflow.",
-    tags: ["Next.js", "TypeScript", "AI features"],
-    href: "/fit",
-    source: "https://github.com/clement55688/clement-portfolio",
-    comingSoon: true,
-  },
-  {
-    title: "React Library Practice",
-    eyebrow: "Practice repository",
-    description: "A browser-ready React catalog built around mock APIs, testable UI states, and practical frontend problem solving.",
-    tags: ["React", "JavaScript", "Testing"],
-    href: "https://github.com/clement55688/react-library-oa-practice",
-    source: "https://github.com/clement55688/react-library-oa-practice",
-    external: true,
-  },
-];
+import styles from "./site.module.css";
+import { SiteFooter, SiteNav } from "@/components/site-nav";
+import { FeaturedDjIntake, GameGrid, ToolGrid } from "@/components/project-cards";
+import { djIntake } from "@/lib/projects";
 
 const experience = [
   { company: "Rhombus Power", period: "2023 — 2026", role: "Software Engineer", detail: "Built full-stack product capabilities and applied AI features to real operational workflows." },
@@ -40,76 +12,66 @@ const experience = [
 export default function Home() {
   return (
     <main className={styles.page}>
-      <div className={styles.backdrop} aria-hidden="true" />
-      <header className={styles.nav}>
-        <Link href="/" className={styles.wordmark} aria-label="Clement Lin home">CLEMENT LIN<span>.</span></Link>
-        <nav aria-label="Primary navigation">
-          <a href="#projects">Projects</a>
-          <a href="#experience">Experience</a>
-          <a href="https://github.com/clement55688" target="_blank" rel="noreferrer">GitHub <ArrowUpRight aria-hidden="true" /></a>
-        </nav>
-      </header>
+      <SiteNav />
 
       <section className={styles.hero} aria-labelledby="hero-title">
-        <div className={styles.availability}><span /> Open to thoughtful product work</div>
-        <div className={styles.heroGrid}>
-          <div>
-            <p className={styles.eyebrow}>Software engineer · Full stack · AI</p>
-            <h1 id="hero-title">Clement Lin <span>— Software Engineer</span></h1>
-            <p className={styles.intro}>4+ years building full-stack products and AI-powered features that make complex work feel clear and useful.</p>
-            <div className={styles.actions}>
-              <a className={styles.primaryAction} href="#projects">View projects <ArrowDownRight aria-hidden="true" /></a>
-              <a className={styles.secondaryAction} href="#experience"><FileText aria-hidden="true" /> Résumé</a>
-              <a className={styles.secondaryAction} href="https://github.com/clement55688" target="_blank" rel="noreferrer">GitHub <ArrowUpRight aria-hidden="true" /></a>
-            </div>
+        <div className={styles.heroPhoto} aria-hidden="true" />
+        <div className={styles.heroInner}>
+          <div className={styles.heroMain}>
+            <div className={styles.tag}><span className={styles.tagBox}><i className={styles.dot} />Software engineer · Full stack · AI</span><span className={styles.tagLine} aria-hidden="true" /></div>
+            <h1 id="hero-title" className={styles.heroTitle}><span>Tools for people</span> <span>who make things.</span></h1>
+            <Link href="/tools/dj-intake" className={styles.liveCard}>
+              <span><span className={styles.bars} aria-hidden="true"><i /><i /><i /><i /></span>New release · v{djIntake.version}</span>
+              <strong>DJ Intake for macOS</strong>
+              <span>Paste a link, get a checked, named file →</span>
+            </Link>
           </div>
-          <aside className={styles.heroPanel} aria-label="Professional focus">
-            <Sparkles aria-hidden="true" />
-            <p>Currently focused on</p>
-            <strong>Human-centered AI products, polished web apps, and practical developer tools.</strong>
-            <div className={styles.focusList}><span>Product engineering</span><span>Modern web platforms</span><span>AI integrations</span></div>
+          <aside className={styles.heroSide}>
+            <p>I&apos;m Clement Lin — a software engineer with 4+ years building full-stack products and AI features that make complex work feel clear.</p>
+            <div className={styles.actions}>
+              <Link className={styles.primary} href="/tools">Explore tools</Link>
+              <Link className={styles.ghost} href="/play">Play a game</Link>
+            </div>
           </aside>
         </div>
-        <p className={styles.scrollCue}>Scroll to explore <span>↓</span></p>
       </section>
 
-      <section id="projects" className={styles.section} aria-labelledby="projects-title">
-        <div className={styles.sectionHeading}>
-          <div><p className={styles.eyebrow}>Selected work</p><h2 id="projects-title">Things I&apos;ve built to be used.</h2></div>
-          <p>Three projects that show how I approach product thinking, frontend detail, and production-ready delivery.</p>
-        </div>
-        <div className={styles.projectGrid}>
-          {projects.map((project, index) => (
-            <article className={styles.projectCard} key={project.title}>
-              <div className={styles.cardTopline}><span>0{index + 1}</span><span className={project.comingSoon ? styles.comingSoon : undefined}>{project.eyebrow}</span></div>
-              <div><h3>{project.title}</h3><p>{project.description}</p></div>
-              <ul className={styles.tags} aria-label={`${project.title} technologies`}>{project.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
-              <div className={styles.cardLinks}>
-                {project.external ? <a href={project.href} target="_blank" rel="noreferrer">Open project <ArrowUpRight aria-hidden="true" /></a> : <Link href={project.href}>Explore project <ArrowUpRight aria-hidden="true" /></Link>}
-                <a href={project.source} target="_blank" rel="noreferrer" aria-label={`View ${project.title} source on GitHub`}><ArrowUpRight aria-hidden="true" /></a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <div className={styles.wrap}>
+        <section id="tools" className={styles.section} aria-labelledby="tools-title">
+          <div className={styles.sectionHead}>
+            <div><span className={styles.eyebrow}>Tools</span><h2 id="tools-title">Things I&apos;ve built to be used.</h2></div>
+            <p>Small, focused software — starting with a download queue I use before every set. <Link href="/tools">See all tools →</Link></p>
+          </div>
+          <FeaturedDjIntake />
+          <ToolGrid />
+        </section>
 
-      <section id="experience" className={`${styles.section} ${styles.experience}`} aria-labelledby="experience-title">
-        <div className={styles.sectionHeading}>
-          <div><p className={styles.eyebrow}>Experience</p><h2 id="experience-title">A practical, product-first engineer.</h2></div>
-          <p>I enjoy the work between a promising idea and a dependable feature: shaping the details, making tradeoffs, and shipping.</p>
-        </div>
-        <div className={styles.timeline}>{experience.map((job) => <article className={styles.role} key={job.company}><p>{job.period}</p><div><h3>{job.company}</h3><span>{job.role}</span></div><p>{job.detail}</p></article>)}</div>
-      </section>
+        <section id="play" className={styles.section} aria-labelledby="play-title">
+          <div className={styles.sectionHead}>
+            <div><span className={styles.eyebrow}>Play</span><h2 id="play-title">Take a break.</h2></div>
+            <p>Browser games I made for fun, with real leaderboards. <Link href="/play">All games →</Link></p>
+          </div>
+          <GameGrid />
+        </section>
 
-      <section className={`${styles.section} ${styles.education}`} aria-labelledby="education-title">
-        <div><p className={styles.eyebrow}>Education</p><h2 id="education-title">Built on strong technical foundations.</h2></div>
-        <div className={styles.educationList}>
-          <article><span>2025</span><div><h3>Master of Computer Science</h3><p>University of Illinois Urbana-Champaign</p></div></article>
-          <article><span>2020</span><div><h3>Master of Science</h3><p>San José State University</p></div></article>
-        </div>
-      </section>
+        <section id="experience" className={styles.section} aria-labelledby="experience-title">
+          <div className={styles.sectionHead}>
+            <div><span className={styles.eyebrow}>Experience</span><h2 id="experience-title">A practical, product-first engineer.</h2></div>
+            <p>I enjoy the work between a promising idea and a dependable feature: shaping the details, making tradeoffs, and shipping.</p>
+          </div>
+          <div className={styles.timeline}>{experience.map((job) => <article className={styles.role} key={job.company}><p>{job.period}</p><div><h3>{job.company}</h3><span>{job.role}</span></div><p>{job.detail}</p></article>)}</div>
+        </section>
 
-      <footer className={styles.footer}><span>© {new Date().getFullYear()} Clement Lin</span><a href="https://github.com/clement55688" target="_blank" rel="noreferrer">GitHub <ArrowUpRight aria-hidden="true" /></a></footer>
+        <section className={`${styles.section} ${styles.education}`} aria-labelledby="education-title">
+          <div className={styles.sectionHead}><div><span className={styles.eyebrow}>Education</span><h2 id="education-title">Strong technical foundations.</h2></div></div>
+          <div className={styles.eduList}>
+            <article><span>2025</span><div><h3>Master of Computer Science</h3><p>University of Illinois Urbana-Champaign</p></div></article>
+            <article><span>2020</span><div><h3>Master of Science</h3><p>San José State University</p></div></article>
+          </div>
+        </section>
+      </div>
+
+      <SiteFooter />
     </main>
   );
 }

@@ -12,6 +12,9 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Branch and pull request previews (`wrangler preview`, run by Workers Builds).
+  // Bindings and secrets are not inherited, so previews never touch production storage.
+  "previews": {},
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
