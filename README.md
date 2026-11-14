@@ -1,6 +1,22 @@
 # Clement Portfolio
 
-An experimental, scroll-driven portfolio built with Next.js 16, TypeScript, Tailwind CSS 4, React Three Fiber, Lenis, and Motion.
+Clement Lin's personal site: tools he has built, browser games, experience, and a live snowfall map.
+
+Live: https://clement-portfolio.a2040404.workers.dev/
+
+![Portfolio home page](docs/screenshot.jpg)
+
+## What's in it
+
+- **Home** (`/`): intro, featured DJ Intake release, tool and game cards, experience and education
+- **Tools** (`/tools`, `/tools/dj-intake`): download page and install notes for [DJ Intake](https://github.com/clement55688/dj-intake-app)
+- **Play** (`/play`, `/playground/snake`): Neon Snake with a global top-ten board, plus links to [Clement's Arcade](https://github.com/clement55688/clement-arcade)
+- **Snow Signal** (`/snow-signal`): live snowfall map built on MapLibre and Open-Meteo
+- **API routes** (`/api/*`): page views, game scores, guestbook, snow data and a status endpoint; persistence through Upstash Redis
+
+## Stack
+
+Next.js 16 (App Router), React, TypeScript, Tailwind CSS 4, MapLibre GL, Upstash Redis. Deployed to Cloudflare Workers with `@opennextjs/cloudflare`.
 
 ## Development
 
@@ -10,6 +26,15 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+Checks (the same ones CI runs):
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
 
 ## Deploy
 
